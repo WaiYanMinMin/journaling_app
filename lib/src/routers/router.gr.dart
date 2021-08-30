@@ -9,6 +9,7 @@ import 'package:flutter/material.dart' as _i2;
 
 import '../screens/calendar.dart' as _i5;
 import '../screens/create.dart' as _i4;
+import '../screens/EditProfile.dart' as _i7;
 import '../screens/home.dart' as _i3;
 import '../screens/Profile.dart' as _i6;
 
@@ -37,6 +38,11 @@ class AppRouter extends _i1.RootStackRouter {
         routeData: routeData,
         builder: (_) {
           return const _i6.ProfileScreen();
+        }),
+    EditProfileRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
+        routeData: routeData,
+        builder: (_) {
+          return const _i7.EditProfileScreen();
         })
   };
 
@@ -45,7 +51,8 @@ class AppRouter extends _i1.RootStackRouter {
         _i1.RouteConfig(HomeRoute.name, path: '/'),
         _i1.RouteConfig(CreateRoute.name, path: '/create-screen'),
         _i1.RouteConfig(CalendarRoute.name, path: '/calendar-screen'),
-        _i1.RouteConfig(ProfileRoute.name, path: '/profile-screen')
+        _i1.RouteConfig(ProfileRoute.name, path: '/profile-screen'),
+        _i1.RouteConfig(EditProfileRoute.name, path: '/edit-profile-screen')
       ];
 }
 
@@ -71,4 +78,10 @@ class ProfileRoute extends _i1.PageRouteInfo {
   const ProfileRoute() : super(name, path: '/profile-screen');
 
   static const String name = 'ProfileRoute';
+}
+
+class EditProfileRoute extends _i1.PageRouteInfo {
+  const EditProfileRoute() : super(name, path: '/edit-profile-screen');
+
+  static const String name = 'EditProfileRoute';
 }

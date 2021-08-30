@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:journaling_app/src/screens/EditProfile.dart';
 
 import 'package:journaling_app/src/screens/Profile.dart';
 import 'package:journaling_app/src/screens/calendar.dart';
@@ -15,6 +16,7 @@ import 'package:journaling_app/src/screens/home.dart';
     AutoRoute(page: CreateScreen),
     AutoRoute(page: CalendarScreen),
     AutoRoute(page: ProfileScreen),
+    AutoRoute(page: EditProfileScreen),
   ],
 )
 class $AppRouter {}
