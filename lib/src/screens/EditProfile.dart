@@ -1,11 +1,9 @@
-
 import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:journaling_app/src/dialogs/confirmation.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({Key? key}) : super(key: key);
@@ -15,19 +13,15 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-    late File? image;
-     Future pickImage()  async {
-       final image =await ImagePicker().pickImage(source: ImageSource.gallery);
-       if(image==null)return;
+  late File? image;
+  Future pickImage() async {
+    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (image == null) return;
 
-       final imageTemp =File(image.path);
-       this.image = imageTemp;
-      
+    final imageTemp = File(image.path);
+    this.image = imageTemp;
+  }
 
-     }
-
-
-  ConfirmationDialogs _confirmationDialogs = new ConfirmationDialogs();
   late final firstName;
   late final lastName;
   late final city;
@@ -292,10 +286,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                       ),
                                       Container(
                                         child: ElevatedButton(
-                                          onPressed: () {
-                                            _confirmationDialogs.confirmation(
-                                                "Are You Sure?", context);
-                                          },
+                                          onPressed: () {},
                                           style: ElevatedButton.styleFrom(
                                             primary: Color(0xff67A9A9),
                                           ),
@@ -310,6 +301,4 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ))))),
     ));
   }
-
-
 }
