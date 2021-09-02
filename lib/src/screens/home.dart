@@ -12,54 +12,53 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _page = 0;
 
-  
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        bottomNavigationBar: CurvedNavigationBar(
-          index: 0,
-          color: Color(0xff67A9A9),
-          backgroundColor: Color(0xff2B7279),
-          items: [
-            Icon(
-              FontAwesomeIcons.home,
-              color: Colors.white,
-            ),
-            Icon(
-              FontAwesomeIcons.plus,
-              color: Colors.white,
-            ),
-            Icon(
-              FontAwesomeIcons.calendarAlt,
-              color: Colors.white,
-            ),
-            Icon(
-              FontAwesomeIcons.userAlt,
-              color: Colors.white,
-            ),
-          ],
-          onTap: (index) {
-            setState(() {
-              _page = index;
-            });
+      bottomNavigationBar: CurvedNavigationBar(
+        index: 0,
+        color: Color(0xff67A9A9),
+        backgroundColor: Color(0xff2B7279),
+        items: [
+          Icon(
+            FontAwesomeIcons.home,
+            color: Colors.white,
+          ),
+          Icon(
+            FontAwesomeIcons.plus,
+            color: Colors.white,
+          ),
+          Icon(
+            FontAwesomeIcons.calendarAlt,
+            color: Colors.white,
+          ),
+          Icon(
+            FontAwesomeIcons.userAlt,
+            color: Colors.white,
+          ),
+        ],
+        onTap: (index) {
+          setState(() {
+            _page = index;
+          });
 
-            if (_page == 3) {
-              AutoRouter.of(context).replace(ProfileRoute());
-            } else if (_page == 2) {
-              AutoRouter.of(context).replace(CalendarRoute());
-            } else if (_page == 1) {
-              AutoRouter.of(context).replace(CreateRoute());
-              
-            } else {
-              AutoRouter.of(context).replace(HomeRoute());
-            }
-          },
-        ),
-        body: MaterialApp(
-            home: Container(
+          if (_page == 3) {
+            AutoRouter.of(context).replace(ProfileRoute());
+          } else if (_page == 2) {
+            AutoRouter.of(context).replace(CalendarRoute());
+          } else if (_page == 1) {
+            AutoRouter.of(context).replace(CreateRoute());
+          } else {
+            AutoRouter.of(context).replace(HomeRoute());
+          }
+        },
+      ),
+      body: MaterialApp(
+        home: Container(
           color: Color(0xff2B7279),
-          child: Text("Home"),
-        )));
+          child: Text("Hi bro Are you there"),
+        ),
+      ),
+    );
   }
 }
