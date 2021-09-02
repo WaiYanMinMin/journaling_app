@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:journaling_app/src/routers/router.gr.dart';
 
-
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
 
@@ -14,7 +13,8 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   int _page = 0;
-
+  String choseLanguage = "English";
+  List<String> languages = ["Myanmar", "English"];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -126,23 +126,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           fontWeight: FontWeight.w500))),
                               Container(
                                   margin: new EdgeInsets.only(left: 130),
-                                  child: Text("English",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                      ))),
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Color(0xff67A9A9),
-                                ),
-                                margin: new EdgeInsets.only(left: 10),
-                                padding: new EdgeInsets.all(5),
-                                child: Icon(
-                                  Icons.arrow_forward_ios,
-                                  color: Colors.white,
-                                  size: 15,
-                                ),
-                              ),
+                                  child: DropdownButton<String>(
+                                    iconSize: 30,
+                                    iconEnabledColor: Colors.white,
+                                    iconDisabledColor: Colors.white54,
+                                    value: choseLanguage,
+                                    dropdownColor: Color(0xff67A9A9),
+                                    onChanged: (String? newValue) {
+                                      setState(() {
+                                        choseLanguage = newValue!;
+                                      });
+                                    },
+                                    items: languages
+                                        .map<DropdownMenuItem<String>>(
+                                            (String value) =>
+                                                DropdownMenuItem<String>(
+                                                    value: value,
+                                                    child: Text(value,
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                        ))))
+                                        .toList(),
+                                  ))
                             ],
                           ),
                         ),
@@ -157,69 +162,49 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                               Container(
                                   margin: new EdgeInsets.only(left: 10),
-                                  child: Text("Notificationr",
+                                  child: Text("Add",
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.w500))),
                               Container(
                                   margin: new EdgeInsets.only(left: 130),
-                                  child: Text("English",
+                                  child: Text("Something here",
                                       style: TextStyle(
                                         color: Colors.white,
                                       ))),
                               Container(
+                                width: 30,
+                                height: 30,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   color: Color(0xff67A9A9),
                                 ),
                                 margin: new EdgeInsets.only(left: 10),
-                                padding: new EdgeInsets.all(5),
-                                child: Icon(
-                                  Icons.arrow_forward_ios,
-                                  color: Colors.white,
-                                  size: 15,
-                                ),
+                                child: IconButton(
+                                    onPressed: () {},
+                                    icon: Icon(Icons.arrow_forward_ios,
+                                        color: Colors.white, size: 15)),
                               ),
                             ],
                           ),
                         ),
                         Container(
-                          margin: new EdgeInsets.only(left: 40, top: 30),
-                          width: double.infinity,
-                          child: Row(
-                            children: [
-                              Icon(
-                                FontAwesomeIcons.globe,
-                                color: Colors.white,
-                              ),
-                              Container(
-                                  margin: new EdgeInsets.only(left: 10),
-                                  child: Text("Languages",
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w500))),
-                              Container(
-                                  margin: new EdgeInsets.only(left: 130),
-                                  child: Text("English",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                      ))),
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Color(0xff67A9A9),
-                                ),
+                            margin: new EdgeInsets.only(top: 30),
+                            width: double.infinity,
+                            child: Container(
                                 margin: new EdgeInsets.only(left: 10),
-                                padding: new EdgeInsets.all(5),
-                                child: Icon(
-                                  Icons.arrow_forward_ios,
-                                  color: Colors.white,
-                                  size: 15,
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
+                                child: TextButton(
+                                  style: ButtonStyle(
+                                    overlayColor: MaterialStateProperty.all(
+                                        Colors.transparent),
+                                  ),
+                                  onPressed: () {},
+                                  child: Text(
+                                    "Erase all memories",
+                                    style: TextStyle(
+                                        fontSize: 15, color: Colors.red),
+                                  ),
+                                ))),
                       ],
                     )),
               )
