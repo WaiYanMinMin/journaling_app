@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:get/instance_manager.dart';
-import 'package:journaling_app/src/screens/create.dart';
-import 'package:journaling_app/src/screens/home.dart';
 
 import 'database/note_database.dart';
 import 'src/App.dart';
-import 'src/routers/router.gr.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(MyHome());
 }
 
 class MyHome extends StatelessWidget {
@@ -21,7 +18,7 @@ class MyHome extends StatelessWidget {
       builder: (context, data) {
         if (data.hasData) {
           Get.put(data.data!.noteDao);
-          return HomeScreen();
+          return MyApp();
         } else if (data.hasError) {
           return Text('${data.error}');
         } else {

@@ -12,8 +12,8 @@ import 'package:journaling_app/src/screens/home.dart';
 @MaterialAutoRouter(
   replaceInRouteName: 'Screen,Route',
   routes: <AutoRoute>[
-    AutoRoute(page: HomeScreen),
-    AutoRoute(page: CreateScreen, initial: true),
+    AutoRoute(page: HomeScreen, initial: true),
+    AutoRoute(page: CreateScreen),
     AutoRoute(page: CalendarScreen),
     AutoRoute(page: ProfileScreen),
     AutoRoute(page: EditProfileScreen),
