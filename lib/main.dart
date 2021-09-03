@@ -18,6 +18,7 @@ class MyHome extends StatelessWidget {
       builder: (context, data) {
         if (data.hasData) {
           Get.put(data.data!.noteDao);
+          Get.put(data.data!.profileDao);
           return MyApp();
         } else if (data.hasError) {
           return Text('${data.error}');

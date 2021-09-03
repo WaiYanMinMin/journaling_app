@@ -2,8 +2,12 @@ import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:image_picker/image_picker.dart';
+
+import 'package:journaling_app/src/dialogs/Confirmdialog.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({Key? key}) : super(key: key);
@@ -13,19 +17,41 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  late File? image;
-  Future pickImage() async {
-    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (image == null) return;
+  File? bgimage;
+  File? profileimage;
+  Confirmdialog dialog = new Confirmdialog();
+  Future pickBackGroundImage() async {
+    try {
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (image == null) return;
 
-    final imageTemp = File(image.path);
-    this.image = imageTemp;
+      final imageTemp = File(image.path);
+      setState(() {
+        this.bgimage = imageTemp;
+      });
+    } on PlatformException catch (e) {
+      print(e);
+    }
   }
 
-  late final firstName;
-  late final lastName;
-  late final city;
-  late final country;
+  Future pickProfileImage() async {
+    try {
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (image == null) return;
+
+      final imageTemp = File(image.path);
+      setState(() {
+        this.profileimage = imageTemp;
+      });
+    } on PlatformException catch (e) {
+      print(e);
+    }
+  }
+
+  TextEditingController firstName = TextEditingController();
+  TextEditingController lastName = TextEditingController();
+  TextEditingController city = TextEditingController();
+  TextEditingController country = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,13 +74,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         children: [
                           Container(
                             height: 200.0,
-                            child: Center(
-                              child: Image.asset(
-                                'assets/pngs/bg.png',
-                                width: double.infinity,
-                                fit: BoxFit.fill,
-                              ),
-                            ),
+                            child: bgimage == null
+                                ? Text("No image selected")
+                                : Center(
+                                    child: Image.file(
+                                    bgimage!,
+                                    width: double.infinity,
+                                    fit: BoxFit.fill,
+                                  )),
                           ),
                           Container(
                             height: 200.0,
@@ -63,7 +90,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 child: Container(
                               color: Colors.transparent,
                               child: IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  pickBackGroundImage();
+                                },
                                 icon: Icon(Icons.add, size: 30),
                               ),
                             )),
@@ -103,10 +132,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 height: 100,
                                 child: Stack(
                                   children: [
-                                    ClipRRect(
-                                        borderRadius: BorderRadius.circular(30),
-                                        child: Image.asset(
-                                            'assets/pngs/avatar.png')),
+                                    Container(
+                                      decoration:
+                                          BoxDecoration(shape: BoxShape.circle),
+                                      child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                          child: profileimage == null
+                                              ? Image.asset(
+                                                  'assets/pngs/avatar.png')
+                                              : Image.file(profileimage!)),
+                                    ),
                                     Positioned(
                                       right: 20,
                                       top: 70,
@@ -117,7 +153,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                             shape: BoxShape.circle,
                                             color: Color(0xff76DBFB)),
                                         child: IconButton(
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            pickProfileImage();
+                                          },
                                           icon: FaIcon(
                                             FontAwesomeIcons.camera,
                                             color: Colors.white,
@@ -160,11 +198,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                                 borderRadius:
                                                     BorderRadius.circular(7.0)),
                                             hintText: 'Enter your first name'),
-                                        onChanged: (value) {
-                                          setState(() {
-                                            firstName = value.trim();
-                                          });
-                                        }),
+                                     controller: firstName),
                                   ),
                                   SizedBox(height: 30),
                                   Container(
@@ -192,11 +226,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                                 borderRadius:
                                                     BorderRadius.circular(7.0)),
                                             hintText: 'Enter your last name'),
-                                        onChanged: (value) {
-                                          setState(() {
-                                            firstName = value.trim();
-                                          });
-                                        }),
+                                       controller: lastName,),
                                   ),
                                   SizedBox(height: 30),
                                   Container(
@@ -224,11 +254,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                                 borderRadius:
                                                     BorderRadius.circular(7.0)),
                                             hintText: 'Enter your country'),
-                                        onChanged: (value) {
-                                          setState(() {
-                                            firstName = value.trim();
-                                          });
-                                        }),
+                                       controller: country,),
                                   ),
                                   SizedBox(height: 30),
                                   Container(
@@ -256,11 +282,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                                 borderRadius:
                                                     BorderRadius.circular(7.0)),
                                             hintText: 'Enter your city'),
-                                        onChanged: (value) {
-                                          setState(() {
-                                            city = value.trim();
-                                          });
-                                        }),
+                                       controller: city,),
                                   ),
                                   SizedBox(height: 30),
                                   Container(
@@ -286,7 +308,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                       ),
                                       Container(
                                         child: ElevatedButton(
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            dialog.confirmation(
+                                                context,
+                                                "Are You Sure?",
+                                                firstName.text,
+                                                lastName.text,
+                                                city.text,
+                                                country.text,bgimage!.path,profileimage!.path);
+                                          },
                                           style: ElevatedButton.styleFrom(
                                             primary: Color(0xff67A9A9),
                                           ),

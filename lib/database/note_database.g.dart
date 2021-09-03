@@ -62,6 +62,8 @@ class _$NoteDatabase extends NoteDatabase {
 
   NoteDao? _noteDaoInstance;
 
+  ProfileDao? _profileDaoInstance;
+
   Future<sqflite.Database> open(String path, List<Migration> migrations,
       [Callback? callback]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
@@ -82,6 +84,8 @@ class _$NoteDatabase extends NoteDatabase {
       onCreate: (database, version) async {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `note` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT NOT NULL, `description` TEXT NOT NULL, `photo` TEXT NOT NULL, `emoji` INTEGER NOT NULL, `weather` INTEGER NOT NULL, `dueDate` TEXT NOT NULL)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `profile` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `profiletitle` TEXT, `lastName` TEXT, `city` TEXT, `country` TEXT, `bgImage` TEXT, `profileImage` TEXT)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -92,6 +96,11 @@ class _$NoteDatabase extends NoteDatabase {
   @override
   NoteDao get noteDao {
     return _noteDaoInstance ??= _$NoteDao(database, changeListener);
+  }
+
+  @override
+  ProfileDao get profileDao {
+    return _profileDaoInstance ??= _$ProfileDao(database, changeListener);
   }
 }
 
@@ -138,5 +147,72 @@ class _$NoteDao extends NoteDao {
   @override
   Future<void> addNote(Note note) async {
     await _noteInsertionAdapter.insert(note, OnConflictStrategy.abort);
+  }
+}
+
+class _$ProfileDao extends ProfileDao {
+  _$ProfileDao(this.database, this.changeListener)
+      : _queryAdapter = QueryAdapter(database, changeListener),
+        _profileInsertionAdapter = InsertionAdapter(
+            database,
+            'profile',
+            (Profile item) => <String, Object?>{
+                  'id': item.id,
+                  'profiletitle': item.firstName,
+                  'lastName': item.lastName,
+                  'city': item.city,
+                  'country': item.country,
+                  'bgImage': item.bgImage,
+                  'profileImage': item.profileImage
+                },
+            changeListener),
+        _profileUpdateAdapter = UpdateAdapter(
+            database,
+            'profile',
+            ['id'],
+            (Profile item) => <String, Object?>{
+                  'id': item.id,
+                  'profiletitle': item.firstName,
+                  'lastName': item.lastName,
+                  'city': item.city,
+                  'country': item.country,
+                  'bgImage': item.bgImage,
+                  'profileImage': item.profileImage
+                },
+            changeListener);
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<Profile> _profileInsertionAdapter;
+
+  final UpdateAdapter<Profile> _profileUpdateAdapter;
+
+  @override
+  Stream<Profile?> getProfiledata() {
+    return _queryAdapter.queryStream('select * from profile',
+        mapper: (Map<String, Object?> row) => Profile(
+            row['profiletitle'] as String?,
+            row['lastName'] as String?,
+            row['city'] as String?,
+            row['country'] as String?,
+            row['bgImage'] as String?,
+            row['profileImage'] as String?,
+            id: row['id'] as int?),
+        queryableName: 'profile',
+        isView: false);
+  }
+
+  @override
+  Future<void> createProfile(Profile profile) async {
+    await _profileInsertionAdapter.insert(profile, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> updateProfile(Profile profile) async {
+    await _profileUpdateAdapter.update(profile, OnConflictStrategy.abort);
   }
 }

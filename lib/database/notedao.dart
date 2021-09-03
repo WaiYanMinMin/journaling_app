@@ -9,3 +9,13 @@ abstract class NoteDao {
   @insert
   Future<void> addNote(Note note);
 }
+
+@dao
+abstract class ProfileDao {
+  @insert
+  Future<void> createProfile(Profile profile);
+  @Query('select * from profile')
+  Stream<Profile?> getProfiledata();
+  @update
+  Future<void> updateProfile(Profile profile);
+}
