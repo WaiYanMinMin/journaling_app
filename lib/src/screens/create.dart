@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:journaling_app/database/data.dart';
 import 'package:journaling_app/database/notedao.dart';
 import 'package:journaling_app/src/routers/router.gr.dart';
@@ -18,6 +21,18 @@ class _CreateScreenState extends State<CreateScreen> {
   int _page = 0;
   var selectedDate = DateTime.now();
   int selectedIndex = 1;
+  int selectedIndexWeather = 1;
+  File? imageFile;
+
+  ImagePicker _picker = ImagePicker();
+
+  _imgFromGallery() async {
+    XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      imageFile = File(pickedFile.path);
+    }
+  }
 
   TextEditingController titlecontroller = TextEditingController();
   TextEditingController descriptioncontroller = TextEditingController();
@@ -25,11 +40,11 @@ class _CreateScreenState extends State<CreateScreen> {
   @override
   Widget build(BuildContext context) {
     final NoteDao noteDao = Get.find();
-
     //
     //pikerDate = DateTime.now();
     String getText() {
-      if (selectedDate != null) {
+      // ignore: unnecessary_null_comparison
+      if (null != selectedDate) {
         return '${selectedDate.year}/${selectedDate.month}/${selectedDate.day}';
       } else {
         return 'Selected Date';
@@ -37,10 +52,16 @@ class _CreateScreenState extends State<CreateScreen> {
     }
 
     List<IconData> emoList = [
-      Icons.emoji_emotions,
-      Icons.ac_unit,
-      Icons.baby_changing_station,
-      Icons.cabin,
+      FontAwesomeIcons.sadCry,
+      FontAwesomeIcons.angry,
+      FontAwesomeIcons.smile,
+      FontAwesomeIcons.sadTear,
+    ];
+    List<IconData> weatherList = [
+      FontAwesomeIcons.cloudRain,
+      FontAwesomeIcons.sun,
+      FontAwesomeIcons.snowflake,
+      FontAwesomeIcons.cloudSun,
     ];
 
     return Scaffold(
@@ -90,87 +111,141 @@ class _CreateScreenState extends State<CreateScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        Get.back();
-                      },
-                      icon: Icon(
-                        Icons.arrow_back_ios,
-                        size: 20,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Spacer(),
-                    InkWell(
-                      onTap: () => datePicker(context),
-                      child: Row(
-                        children: [
-                          Text(
-                            getText(), // '${selectedDate.toString()}',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Icon(
-                            Icons.arrow_drop_down_outlined,
+                color: Colors.red,
+                child: InkWell(
+                  onTap: () => datePicker(context),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        getText(), // '${selectedDate.toString()}',
+                        style: TextStyle(
                             color: Colors.white,
-                          )
-                        ],
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold),
                       ),
-                    ),
-                    Spacer(),
-                  ],
+                      Icon(
+                        Icons.arrow_drop_down_outlined,
+                        color: Colors.white,
+                      )
+                    ],
+                  ),
                 ),
               ),
               GestureDetector(
-                onTap: () {},
+                onTap: _imgFromGallery,
                 child: Container(
-                  height: 100,
-                  width: 100,
-                  color: Colors.grey,
+                  height: 180,
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.white12,
+                  child: imageFile == null
+                      ? Center(
+                          child: FaIcon(
+                            FontAwesomeIcons.camera,
+                            color: Colors.white,
+                          ),
+                        )
+                      : Image.file(
+                          imageFile!,
+                          fit: BoxFit.fill,
+                          width: 100,
+                          height: 100,
+                        ),
                 ),
               ),
+              SizedBox(
+                height: 10,
+              ),
               Padding(
-                padding: EdgeInsets.only(top: 5, left: 5),
+                padding: EdgeInsets.only(top: 0, left: 0),
                 child: Container(
-                  height: 50,
+                  height: 45,
                   margin: EdgeInsets.only(top: 10),
                   //padding: EdgeInsets.symmetric(vertical: 10),
-                  child: ListView.builder(
-                    itemCount: emoList.length,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (_, index) => Padding(
-                      padding: const EdgeInsets.only(left: 20),
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            selectedIndex = index;
-                          });
-                        },
-                        child: Container(
-                          margin: EdgeInsets.only(left: 20),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: selectedIndex == index
-                                ? Colors.white
-                                : Colors.transparent,
-                            border: Border.all(
-                                width: 0.5,
-                                color: selectedIndex == index
-                                    ? Colors.white
-                                    : Colors.grey),
-                          ),
-                          // child: Text('${emoList[index]}'),
-                          child: Icon(emoList[index],
-                              color: selectedIndex == index
-                                  ? Color(0xFf2b7379)
-                                  : Colors.grey[400]),
+                  child: Center(
+                    child: ListView.builder(
+                      itemCount: emoList.length,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (_, index) => Padding(
+                        padding: const EdgeInsets.only(left: 25),
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              selectedIndex = index;
+                            });
+                          },
+                          child: Container(
+                            margin: EdgeInsets.only(left: 20),
 
-                          padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: selectedIndex == index
+                                  ? Colors.white
+                                  : Colors.transparent,
+                              border: Border.all(
+                                  width: 0.7,
+                                  color: selectedIndex == index
+                                      ? Colors.white
+                                      : Colors.white54),
+                            ),
+                            // child: Text('${emoList[index]}'),
+                            child: Center(
+                              child: Icon(emoList[index],
+                                  color: selectedIndex == index
+                                      ? Color(0xFf2b7379)
+                                      : Colors.white54),
+                            ),
+
+                            padding: EdgeInsets.all(10),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 0, left: 0),
+                child: Container(
+                  height: 45,
+                  margin: EdgeInsets.only(top: 10),
+                  //padding: EdgeInsets.symmetric(vertical: 10),
+                  child: Center(
+                    child: ListView.builder(
+                      itemCount: emoList.length,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (_, index) => Padding(
+                        padding: const EdgeInsets.only(left: 25),
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              selectedIndexWeather = index;
+                            });
+                          },
+                          child: Container(
+                            margin: EdgeInsets.only(left: 20),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: selectedIndexWeather == index
+                                  ? Colors.white
+                                  : Colors.transparent,
+                              border: Border.all(
+                                  width: 0.7,
+                                  color: selectedIndexWeather == index
+                                      ? Colors.white
+                                      : Colors.white54),
+                            ),
+                            // child: Text('${emoList[index]}'),
+                            child: Icon(weatherList[index],
+                                color: selectedIndexWeather == index
+                                    ? Color(0xFf2b7379)
+                                    : Colors.white54),
+
+                            padding: EdgeInsets.all(10),
+                          ),
                         ),
                       ),
                     ),
@@ -240,8 +315,11 @@ class _CreateScreenState extends State<CreateScreen> {
                   Spacer(),
                   Container(
                     width: 80,
-                    color: Colors.white,
                     padding: EdgeInsets.all(15.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white,
+                    ),
                     child: Center(
                       child: Text(
                         'Cancel',
@@ -253,14 +331,17 @@ class _CreateScreenState extends State<CreateScreen> {
                   ),
                   GestureDetector(
                     onTap: () {
+                      refreshAll();
+                      AutoRouter.of(context).push(HomeRoute());
+                      print('$imageFile');
                       // Get.back();
                       noteDao.addNote(
                         Note(
                           title: titlecontroller.text,
                           description: descriptioncontroller.text,
-                          photo: '',
+                          photo: '$imageFile',
                           emoji: selectedIndex,
-                          weather: 1,
+                          weather: selectedIndexWeather,
                           dueDate: selectedDate.toString(),
                         ),
                       );
@@ -268,8 +349,11 @@ class _CreateScreenState extends State<CreateScreen> {
                     child: Container(
                       width: 80,
                       margin: EdgeInsets.only(right: 15, left: 10),
-                      color: Color(0xFFedd09f),
                       padding: EdgeInsets.all(15.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Color(0xFFedd09f),
+                      ),
                       child: Center(
                         child: Text(
                           'Save',
@@ -303,5 +387,12 @@ class _CreateScreenState extends State<CreateScreen> {
         selectedDate = date;
       });
     }
+  }
+
+  void refreshAll() {
+    setState(() {
+      titlecontroller.clear();
+      descriptioncontroller.clear();
+    });
   }
 }
