@@ -21,33 +21,29 @@ environment:
   sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
+  auto_route: ^2.3.0
+  cupertino_icons: ^1.0.2
+  curved_navigation_bar: ^1.0.1
+  dio: ^4.0.0
+  floor: ^1.1.0
   flutter:
     sdk: flutter
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
-  auto_route: ^2.3.0
-  dio: ^4.0.0
+  flutter_slidable_list_view: ^1.2.8
   font_awesome_flutter: ^9.1.0
   get: ^4.3.8
   google_fonts: ^2.1.0
   image_picker: ^0.8.4
   infinite_scroll_pagination: ^3.1.0
-  curved_navigation_bar: ^1.0.1
-  floor: ^1.1.0
-  
 
 dev_dependencies:
+  auto_route_generator: any
+  build_runner: any
+  floor_generator: ^1.1.0
   flutter_test:
     sdk: flutter
-  auto_route_generator: any
-  floor_generator: ^1.1.0
-  build_runner: any
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
-
 # The following section is specific to Flutter.
 flutter:
   # The following line ensures that the Material Icons font is
@@ -58,13 +54,10 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/pngs/
-
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
-
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/assets-and-images/#from-packages
-
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a
