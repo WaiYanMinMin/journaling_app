@@ -4,25 +4,22 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
 
 import 'package:image_picker/image_picker.dart';
-import 'package:journaling_app/database/data.dart';
-import 'package:journaling_app/database/notedao.dart';
-import 'package:journaling_app/src/dialogs/ConfirmUpdatedialog.dart';
 
-class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({Key? key}) : super(key: key);
+import 'package:journaling_app/src/dialogs/ConfirmSetupdialog.dart';
+
+class SetupProfileScreen extends StatefulWidget {
+  const SetupProfileScreen({Key? key}) : super(key: key);
 
   @override
-  _EditProfileScreenState createState() => _EditProfileScreenState();
+  _SetupProfileScreenState createState() => _SetupProfileScreenState();
 }
 
-class _EditProfileScreenState extends State<EditProfileScreen> {
-  Profile profile = Get.arguments;
+class _SetupProfileScreenState extends State<SetupProfileScreen> {
   File? bgimage;
   File? profileimage;
-  ConfirmUpdatedialog dialog = new ConfirmUpdatedialog();
+  ConfirmSetupdialog dialog = new ConfirmSetupdialog();
   Future pickBackGroundImage() async {
     try {
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -51,16 +48,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
+  TextEditingController firstName = TextEditingController();
+  TextEditingController lastName = TextEditingController();
+  TextEditingController city = TextEditingController();
+  TextEditingController country = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    TextEditingController firstName = TextEditingController();
-    TextEditingController lastName = TextEditingController();
-    TextEditingController city = TextEditingController();
-    TextEditingController country = TextEditingController();
-    firstName.text = profile.firstName;
-    lastName.text = profile.lastName;
-    city.text = profile.city;
-    country.text = profile.country;
     return Scaffold(
         body: Container(
       color: Color(0xff2B7279),
@@ -109,20 +102,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             left: 20,
                             child: Row(
                               children: [
-                                IconButton(
-                                    onPressed: () {
-                                      AutoRouter.of(context).pop();
-                                    },
-                                    icon: Icon(
-                                      Icons.keyboard_arrow_left,
-                                      color: Color(0xff67A9A9),
-                                      size: 30,
-                                    )),
                                 SizedBox(
-                                  width: 80,
+                                  width: 100,
                                 ),
                                 Text(
-                                  "Edit Profile",
+                                  "Setup Profile",
                                   style: TextStyle(
                                       fontSize: 20,
                                       color: Color(0xff67A9A9),
@@ -195,18 +179,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     height: 50,
                                     width: 300,
                                     child: TextField(
-                                      controller: firstName,
-                                      decoration: InputDecoration(
-                                          fillColor: Color(0xffF1F1F1),
-                                          filled: true,
-                                          border: OutlineInputBorder(
-                                              borderSide: const BorderSide(
-                                                  color: Color(0xffCECECE),
-                                                  width: 2.0),
-                                              borderRadius:
-                                                  BorderRadius.circular(7.0)),
-                                          hintText: 'Enter your first name'),
-                                    ),
+                                        decoration: InputDecoration(
+                                            fillColor: Color(0xffF1F1F1),
+                                            filled: true,
+                                            border: OutlineInputBorder(
+                                                borderSide: const BorderSide(
+                                                    color: Color(0xffCECECE),
+                                                    width: 2.0),
+                                                borderRadius:
+                                                    BorderRadius.circular(7.0)),
+                                            hintText: 'Enter your first name'),
+                                        controller: firstName),
                                   ),
                                   SizedBox(height: 30),
                                   Container(
@@ -320,7 +303,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                       Container(
                                         child: ElevatedButton(
                                           onPressed: () {
-                                            dialog.confirmationUpdate(
+                                            dialog.confirmationSetup(
                                                 context,
                                                 "Are You Sure?",
                                                 firstName.text,

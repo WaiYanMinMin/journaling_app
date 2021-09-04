@@ -85,7 +85,7 @@ class _$NoteDatabase extends NoteDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `note` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT NOT NULL, `description` TEXT NOT NULL, `photo` TEXT NOT NULL, `emoji` INTEGER NOT NULL, `weather` INTEGER NOT NULL, `dueDate` TEXT NOT NULL)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `profile` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `profiletitle` TEXT, `lastName` TEXT, `city` TEXT, `country` TEXT, `bgImage` TEXT, `profileImage` TEXT)');
+            'CREATE TABLE IF NOT EXISTS `profile` (`id` INTEGER, `profiletitle` TEXT NOT NULL, `lastName` TEXT NOT NULL, `city` TEXT NOT NULL, `country` TEXT NOT NULL, `bgImage` TEXT NOT NULL, `profileImage` TEXT NOT NULL, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -237,13 +237,13 @@ class _$ProfileDao extends ProfileDao {
   Stream<Profile?> getProfiledata() {
     return _queryAdapter.queryStream('select * from profile',
         mapper: (Map<String, Object?> row) => Profile(
-            row['profiletitle'] as String?,
-            row['lastName'] as String?,
-            row['city'] as String?,
-            row['country'] as String?,
-            row['bgImage'] as String?,
-            row['profileImage'] as String?,
-            id: row['id'] as int?),
+            row['profiletitle'] as String,
+            row['lastName'] as String,
+            row['city'] as String,
+            row['country'] as String,
+            row['bgImage'] as String,
+            row['profileImage'] as String,
+            row['id'] as int?),
         queryableName: 'profile',
         isView: false);
   }

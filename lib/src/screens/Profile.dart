@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:journaling_app/database/data.dart';
 import 'package:journaling_app/database/notedao.dart';
 import 'package:journaling_app/src/routers/router.gr.dart';
+import 'package:journaling_app/src/screens/EditProfile.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -77,7 +78,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: Center(
                           child: data.hasData
                               ? Image.file(
-                                  File(data.data!.bgImage!),
+                                  File(data.data!.bgImage),
                                   width: double.infinity,
                                   fit: BoxFit.fill,
                                 )
@@ -97,9 +98,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   child: Center(
                                       child: data.hasData
                                           ? Text(
-                                              data.data!.firstName! +
+                                              data.data!.firstName +
                                                   " " +
-                                                  data.data!.lastName!,
+                                                  data.data!.lastName,
                                               style: TextStyle(
                                                   fontSize: 20,
                                                   color: Colors.white,
@@ -115,9 +116,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                                 data.hasData
                                     ? Text(
-                                        data.data!.city! +
+                                        data.data!.city +
                                             "," +
-                                            data.data!.country!,
+                                            data.data!.country,
                                         style: TextStyle(color: Colors.white54),
                                       )
                                     : Text(
@@ -263,7 +264,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(100),
                           child: data.hasData
-                              ? Image.file(File(data.data!.profileImage!))
+                              ? Image.file(File(data.data!.profileImage))
                               : Text("Choose image")),
                     ),
                   ),
@@ -275,7 +276,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       height: 50,
                       child: IconButton(
                         onPressed: () {
-                          AutoRouter.of(context).push(EditProfileRoute());
+                           Get.to(EditProfileScreen(),arguments: data.data);
                         },
                         icon: FaIcon(
                           FontAwesomeIcons.edit,
