@@ -8,6 +8,8 @@ import 'package:journaling_app/database/notedao.dart';
 import 'package:journaling_app/src/routers/router.gr.dart';
 import 'package:journaling_app/src/screens/detail_screen.dart';
 
+import 'update_story.dart';
+
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -167,10 +169,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   context,
                   MaterialPageRoute(
                     builder: (_) => DetailScreen(
-                        title: data.data![positioned].title,
-                        description: data.data![positioned].description,
-                        selectedEmoji: data.data![positioned].emoji,
-                        selectedWeather: data.data![positioned].weather),
+                      title: data.data![positioned].title,
+                      description: data.data![positioned].description,
+                      selectedEmoji: data.data![positioned].emoji,
+                      selectedWeather: data.data![positioned].weather,
+                      dueDate: data.data![positioned].dueDate,
+                    ),
                   ),
                 );
               },
@@ -208,6 +212,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: Container(
                                 //color: Colors.black12,
                                 child: Center(
+                                  //child: Text(data.data![positioned].title),
                                   child: Container(
                                     width:
                                         MediaQuery.of(context).size.width / 1.6,
@@ -217,7 +222,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                           color: Color(0xFF2b7379),
-                                          fontSize: 17,
+                                          fontSize: 19,
                                           fontWeight: FontWeight.bold),
                                     ),
                                   ),
@@ -225,45 +230,27 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(right: 5),
+                              padding: const EdgeInsets.only(right: 10),
                               child: Center(
                                 child: Container(
-                                    width: 80,
-                                    height: 50,
-                                    //color: Colors.black12,
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          width: 33,
-                                          height: 33,
-                                          color: Colors.white30,
-                                          child: Center(
-                                            child: FaIcon(
-                                              getEmoji(
-                                                  data.data![positioned].emoji),
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 5,
-                                        ),
-                                        Container(
-                                          width: 33,
-                                          height: 33,
-                                          color: Colors.white30,
-                                          child: Center(
-                                            child: FaIcon(
-                                              getWeather(data
-                                                  .data![positioned].weather),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    )),
+                                  width: 40,
+                                  height: 40,
+                                  //color: Colors.black12,
+                                  child: Container(
+                                    width: 33,
+                                    height: 33,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white30,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Center(
+                                      child: FaIcon(
+                                        getEmoji(data.data![positioned].emoji),
+                                        color: Color(0xFF2b7379),
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
                           ],
@@ -291,55 +278,101 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    width:
-                                        MediaQuery.of(context).size.width / 1.4,
-                                    child: Text(
-                                      data.data![positioned].description,
-                                      maxLines: 4,
-                                      overflow: TextOverflow.ellipsis,
+                              Container(
+                                width: 60,
+                                height: 88,
+                                //color: Colors.black12,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      data.data![positioned].dueDate
+                                          .substring(0, 3),
                                       style: TextStyle(
-                                          color: Colors.grey, fontSize: 15),
+                                        fontSize: 27,
+                                        fontWeight: FontWeight.w700,
+                                        color: Color(0xFFedd09f),
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Container(
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        Icon(
-                                          Icons.date_range_outlined,
-                                          size: 20,
-                                        ),
-                                        SizedBox(width: 8),
-                                        Text(
-                                          data.data![positioned].dueDate
-                                              .substring(0, 10),
-                                          style: TextStyle(fontSize: 14),
-                                        ),
-                                      ],
+                                    //Long long ago ,only have one fool in the Myanmar countryLong long ago ,only have one fool in the Myanmar countryLong long ago ,only have one fool in the Myanmar countryLong long ago ,only have one fool in the Myanmar countryLong long ago ,only have one fool in the Myanmar countryLong long ago ,only have one fool in the Myanmar countryLong long ago ,only have one fool in the Myanmar country
+                                    SizedBox(
+                                      height: 12,
                                     ),
-                                  ),
-                                ],
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 10),
+                                      child: FaIcon(
+                                        getWeather(
+                                          data.data![positioned].weather,
+                                        ),
+                                        color: Colors.grey[400],
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
+                              Container(
+                                padding: EdgeInsets.only(top: 8),
+                                width: MediaQuery.of(context).size.width / 2,
+                                child: Text(
+                                  data.data![positioned].description,
+                                  maxLines: 4,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 15),
+                                ),
+                              ),
+                              // SizedBox(
+                              //   height: 10,
+                              // ),
+                              // Container(
+                              //   child: Row(
+                              //     mainAxisAlignment:
+                              //         MainAxisAlignment.start,
+                              //     crossAxisAlignment:
+                              //         CrossAxisAlignment.end,
+                              //     children: [
+                              //       Icon(
+                              //         Icons.date_range_outlined,
+                              //         size: 20,
+                              //       ),
+                              //       SizedBox(width: 8),
+                              //       Text(
+                              //         data.data![positioned].dueDate,
+                              //         style: TextStyle(fontSize: 14),
+                              //       ),
+                              //     ],
+                              //   ),
+                              // ),
                               Container(
                                 width: 60,
                                 height: 60,
+                                color: Colors.black12,
+                                // child: Image.file(
+                                //   File(data.data![positioned].photo),
+                                // ),
                               ),
                             ],
                           ),
                         ),
                       ),
                     ),
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: Container(
+                        child: IconButton(
+                          icon: Icon(Icons.delete),
+                          iconSize: 30,
+                          color: Colors.black,
+                          onPressed: () {
+                            Get.to(UpdateScreen(),
+                                arguments: data.data![positioned]);
+                          },
+                        ),
+                      ),
+                    )
                   ],
                 ),
                 // Container(
