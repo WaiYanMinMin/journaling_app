@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:floor/floor.dart';
 
 @Entity(tableName: 'note')
