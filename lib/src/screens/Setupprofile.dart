@@ -282,21 +282,6 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
                                   Container(
                                     margin: new EdgeInsets.only(left: 130),
                                     child: Row(children: [
-                                      Container(
-                                        child: ElevatedButton(
-                                          onPressed: () {
-                                            AutoRouter.of(context).pop();
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                            primary: Colors.white,
-                                          ),
-                                          child: Text(
-                                            "Cancel",
-                                            style: TextStyle(
-                                                color: Color(0xff67A9A9)),
-                                          ),
-                                        ),
-                                      ),
                                       SizedBox(
                                         width: 20,
                                       ),

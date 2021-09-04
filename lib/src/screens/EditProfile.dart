@@ -4,11 +4,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
 
 import 'package:image_picker/image_picker.dart';
-import 'package:journaling_app/database/data.dart';
-import 'package:journaling_app/database/notedao.dart';
+
 import 'package:journaling_app/src/dialogs/ConfirmUpdatedialog.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -19,7 +17,6 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  Profile profile = Get.arguments;
   File? bgimage;
   File? profileimage;
   ConfirmUpdatedialog dialog = new ConfirmUpdatedialog();
@@ -51,16 +48,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
+  TextEditingController firstName = TextEditingController();
+  TextEditingController lastName = TextEditingController();
+  TextEditingController city = TextEditingController();
+  TextEditingController country = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    TextEditingController firstName = TextEditingController();
-    TextEditingController lastName = TextEditingController();
-    TextEditingController city = TextEditingController();
-    TextEditingController country = TextEditingController();
-    firstName.text = profile.firstName;
-    lastName.text = profile.lastName;
-    city.text = profile.city;
-    country.text = profile.country;
     return Scaffold(
         body: Container(
       color: Color(0xff2B7279),

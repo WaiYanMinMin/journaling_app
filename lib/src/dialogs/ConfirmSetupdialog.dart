@@ -2,11 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:journaling_app/database/data.dart';
-import 'package:journaling_app/database/note_database.dart';
+
 import 'package:journaling_app/database/notedao.dart';
-import 'package:journaling_app/main.dart';
+
 import 'package:journaling_app/src/App.dart';
-import 'package:journaling_app/src/screens/home.dart';
+
 
 class ConfirmSetupdialog {
   final ProfileDao profileDao = Get.find();
