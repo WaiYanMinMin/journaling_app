@@ -24,17 +24,17 @@ class Note {
 
 @Entity(tableName: 'profile')
 class Profile {
-  @PrimaryKey(autoGenerate: true)
+  @PrimaryKey(autoGenerate: false)
   int? id;
   @ColumnInfo(name: 'profiletitle')
-  String? firstName;
-  String? lastName;
-  String? city;
-  String? country;
-  String? bgImage;
-  String? profileImage;
+  String firstName;
+  String lastName;
+  String city;
+  String country;
+  String bgImage;
+  String profileImage;
 
   Profile(this.firstName, this.lastName, this.city, this.country, this.bgImage,
       this.profileImage,
-      {this.id});
+      this.id);
 }

@@ -2,13 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:journaling_app/database/data.dart';
+
 import 'package:journaling_app/database/notedao.dart';
 
-import 'package:journaling_app/src/screens/Profile.dart';
+import 'package:journaling_app/src/App.dart';
 
-class Confirmdialog {
+
+class ConfirmSetupdialog {
   final ProfileDao profileDao = Get.find();
-  confirmation(
+  confirmationSetup(
       BuildContext context,
       String title,
       String firstname,
@@ -44,8 +46,8 @@ class Confirmdialog {
                 ),
                 onPressed: () {
                   profileDao.createProfile(Profile(firstname, lastname, city,
-                      country, bgImage, profileImage));
-                  Get.to(ProfileScreen());
+                      country, bgImage, profileImage,1));
+                  Get.to(MyApp());
                 }, //save data to database
                 child: Text(
                   "Yes",

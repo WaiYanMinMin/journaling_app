@@ -7,19 +7,19 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:image_picker/image_picker.dart';
 
-import 'package:journaling_app/src/dialogs/ConfirmUpdatedialog.dart';
+import 'package:journaling_app/src/dialogs/ConfirmSetupdialog.dart';
 
-class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({Key? key}) : super(key: key);
+class SetupProfileScreen extends StatefulWidget {
+  const SetupProfileScreen({Key? key}) : super(key: key);
 
   @override
-  _EditProfileScreenState createState() => _EditProfileScreenState();
+  _SetupProfileScreenState createState() => _SetupProfileScreenState();
 }
 
-class _EditProfileScreenState extends State<EditProfileScreen> {
+class _SetupProfileScreenState extends State<SetupProfileScreen> {
   File? bgimage;
   File? profileimage;
-  ConfirmUpdatedialog dialog = new ConfirmUpdatedialog();
+  ConfirmSetupdialog dialog = new ConfirmSetupdialog();
   Future pickBackGroundImage() async {
     try {
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -102,20 +102,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             left: 20,
                             child: Row(
                               children: [
-                                IconButton(
-                                    onPressed: () {
-                                      AutoRouter.of(context).pop();
-                                    },
-                                    icon: Icon(
-                                      Icons.keyboard_arrow_left,
-                                      color: Color(0xff67A9A9),
-                                      size: 30,
-                                    )),
                                 SizedBox(
-                                  width: 80,
+                                  width: 100,
                                 ),
                                 Text(
-                                  "Edit Profile",
+                                  "Setup Profile",
                                   style: TextStyle(
                                       fontSize: 20,
                                       color: Color(0xff67A9A9),
@@ -188,18 +179,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     height: 50,
                                     width: 300,
                                     child: TextField(
-                                      controller: firstName,
-                                      decoration: InputDecoration(
-                                          fillColor: Color(0xffF1F1F1),
-                                          filled: true,
-                                          border: OutlineInputBorder(
-                                              borderSide: const BorderSide(
-                                                  color: Color(0xffCECECE),
-                                                  width: 2.0),
-                                              borderRadius:
-                                                  BorderRadius.circular(7.0)),
-                                          hintText: 'Enter your first name'),
-                                    ),
+                                        decoration: InputDecoration(
+                                            fillColor: Color(0xffF1F1F1),
+                                            filled: true,
+                                            border: OutlineInputBorder(
+                                                borderSide: const BorderSide(
+                                                    color: Color(0xffCECECE),
+                                                    width: 2.0),
+                                                borderRadius:
+                                                    BorderRadius.circular(7.0)),
+                                            hintText: 'Enter your first name'),
+                                        controller: firstName),
                                   ),
                                   SizedBox(height: 30),
                                   Container(
@@ -292,28 +282,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   Container(
                                     margin: new EdgeInsets.only(left: 130),
                                     child: Row(children: [
-                                      Container(
-                                        child: ElevatedButton(
-                                          onPressed: () {
-                                            AutoRouter.of(context).pop();
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                            primary: Colors.white,
-                                          ),
-                                          child: Text(
-                                            "Cancel",
-                                            style: TextStyle(
-                                                color: Color(0xff67A9A9)),
-                                          ),
-                                        ),
-                                      ),
                                       SizedBox(
                                         width: 20,
                                       ),
                                       Container(
                                         child: ElevatedButton(
                                           onPressed: () {
-                                            dialog.confirmationUpdate(
+                                            dialog.confirmationSetup(
                                                 context,
                                                 "Are You Sure?",
                                                 firstName.text,
