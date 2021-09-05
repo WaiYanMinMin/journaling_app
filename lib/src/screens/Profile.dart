@@ -7,7 +7,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:journaling_app/database/data.dart';
 import 'package:journaling_app/database/notedao.dart';
-import 'package:journaling_app/src/dialogs/ConfirmUpdatedialog.dart';
 import 'package:journaling_app/src/routers/router.gr.dart';
 import 'package:journaling_app/src/screens/EditProfile.dart';
 
