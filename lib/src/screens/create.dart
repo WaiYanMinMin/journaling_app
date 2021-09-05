@@ -31,9 +31,12 @@ class _CreateScreenState extends State<CreateScreen> {
   _imgFromGallery() async {
     XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
 
-    if (pickedFile != null) {
-      imageFile = File(pickedFile.path);
-    }
+    if (pickedFile == null) return;
+
+    final imageTemp = File(pickedFile.path);
+    setState(() {
+      this.imageFile = imageTemp;
+    });
   }
 
   TextEditingController titlecontroller = TextEditingController();
@@ -334,7 +337,7 @@ class _CreateScreenState extends State<CreateScreen> {
                         Note(
                           title: titlecontroller.text,
                           description: descriptioncontroller.text,
-                          photo: '',
+                          photo: imageFile!.path,
                           emoji: selectedIndex,
                           weather: selectedIndexWeather,
                           dueDate: _formatDate.toString(),

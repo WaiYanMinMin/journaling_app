@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +10,6 @@ import 'package:journaling_app/database/notedao.dart';
 import 'package:journaling_app/src/routers/router.gr.dart';
 import 'package:journaling_app/src/screens/detail_screen.dart';
 
-import 'update_story.dart';
-
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -19,10 +19,6 @@ class _HomeScreenState extends State<HomeScreen> {
   int _page = 0;
 
   final NoteDao noteDao = Get.find();
-  // FontAwesomeIcons.sadCry,
-  //     FontAwesomeIcons.angry,
-  //     FontAwesomeIcons.smile,
-  //     FontAwesomeIcons.sadTear,
 
   IconData getEmoji(int? selectIndex) {
     if (selectIndex == 0) {
@@ -51,6 +47,8 @@ class _HomeScreenState extends State<HomeScreen> {
     //   FontAwesomeIcons.snowflake,
     //   FontAwesomeIcons.cloudSun,
   }
+
+  TextEditingController? textSearchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -109,6 +107,16 @@ class _HomeScreenState extends State<HomeScreen> {
                         borderRadius: BorderRadius.circular(30),
                       ),
                       child: TextField(
+                        controller: textSearchController,
+                        // onChanged: (value) {
+                        //   setState(() {
+                        //     _list = _user
+                        //         .where(
+                        //           (u) => u.title.toLowerCase().contains(value),
+                        //         )
+                        //         .toList();
+                        //   });
+                        // },
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           prefixIcon: Icon(Icons.search),
@@ -169,8 +177,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   context,
                   MaterialPageRoute(
                     builder: (_) => DetailScreen(
+                      id: data.data![positioned].id!,
                       title: data.data![positioned].title,
                       description: data.data![positioned].description,
+                      photo: data.data![positioned].photo,
                       selectedEmoji: data.data![positioned].emoji,
                       selectedWeather: data.data![positioned].weather,
                       dueDate: data.data![positioned].dueDate,
@@ -181,7 +191,6 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Container(
                 margin: EdgeInsets.only(top: 12),
                 height: 200,
-
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
                   //color: Color(0xFF2b7379),
@@ -274,245 +283,114 @@ class _HomeScreenState extends State<HomeScreen> {
                           padding: EdgeInsets.only(
                             left: 10,
                             right: 10,
-                            top: 15,
+                            top: 10,
                           ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          child: Column(
                             children: [
-                              Container(
-                                width: 60,
-                                height: 88,
-                                //color: Colors.black12,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      data.data![positioned].dueDate
-                                          .substring(0, 3),
-                                      style: TextStyle(
-                                        fontSize: 27,
-                                        fontWeight: FontWeight.w700,
-                                        color: Color(0xFFedd09f),
-                                      ),
-                                    ),
-                                    //Long long ago ,only have one fool in the Myanmar countryLong long ago ,only have one fool in the Myanmar countryLong long ago ,only have one fool in the Myanmar countryLong long ago ,only have one fool in the Myanmar countryLong long ago ,only have one fool in the Myanmar countryLong long ago ,only have one fool in the Myanmar countryLong long ago ,only have one fool in the Myanmar country
-                                    SizedBox(
-                                      height: 12,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 10),
-                                      child: FaIcon(
-                                        getWeather(
-                                          data.data![positioned].weather,
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    width: 60,
+                                    height: 88,
+                                    //color: Colors.black12,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          data.data![positioned].dueDate
+                                              .substring(0, 3),
+                                          style: TextStyle(
+                                            fontSize: 27,
+                                            fontWeight: FontWeight.w700,
+                                            color: Color(0xFFedd09f),
+                                          ),
                                         ),
-                                        color: Colors.grey[400],
-                                      ),
+                                        //Long long ago ,only have one fool in the Myanmar countryLong long ago ,only have one fool in the Myanmar countryLong long ago ,only have one fool in the Myanmar countryLong long ago ,only have one fool in the Myanmar countryLong long ago ,only have one fool in the Myanmar countryLong long ago ,only have one fool in the Myanmar countryLong long ago ,only have one fool in the Myanmar country
+                                        SizedBox(
+                                          height: 12,
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 10),
+                                          child: FaIcon(
+                                            getWeather(
+                                              data.data![positioned].weather,
+                                            ),
+                                            color: Colors.grey[400],
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.only(top: 8),
+                                    width:
+                                        MediaQuery.of(context).size.width / 2,
+                                    child: Text(
+                                      data.data![positioned].description,
+                                      maxLines: 4,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          color: Colors.grey, fontSize: 15),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 60,
+                                    height: 60,
+                                    //color: Colors.black12,
+                                    child: data.hasData
+                                        ? Image.file(
+                                            File(data.data![positioned].photo),
+                                            fit: BoxFit.fill,
+                                          )
+                                        : Text('Any Photo'),
+                                  ),
+                                ],
                               ),
-                              Container(
-                                padding: EdgeInsets.only(top: 8),
-                                width: MediaQuery.of(context).size.width / 2,
-                                child: Text(
-                                  data.data![positioned].description,
-                                  maxLines: 4,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                      color: Colors.grey, fontSize: 15),
+                              Expanded(
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 8),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            Icons.calendar_today,
+                                            size: 20,
+                                            color: Colors.grey,
+                                          ),
+                                          SizedBox(
+                                            width: 8,
+                                          ),
+                                          Text(
+                                            data.data![positioned].dueDate,
+                                            style: TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 13),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              // SizedBox(
-                              //   height: 10,
-                              // ),
-                              // Container(
-                              //   child: Row(
-                              //     mainAxisAlignment:
-                              //         MainAxisAlignment.start,
-                              //     crossAxisAlignment:
-                              //         CrossAxisAlignment.end,
-                              //     children: [
-                              //       Icon(
-                              //         Icons.date_range_outlined,
-                              //         size: 20,
-                              //       ),
-                              //       SizedBox(width: 8),
-                              //       Text(
-                              //         data.data![positioned].dueDate,
-                              //         style: TextStyle(fontSize: 14),
-                              //       ),
-                              //     ],
-                              //   ),
-                              // ),
-                              Container(
-                                width: 60,
-                                height: 60,
-                                color: Colors.black12,
-                                // child: Image.file(
-                                //   File(data.data![positioned].photo),
-                                // ),
                               ),
                             ],
                           ),
                         ),
                       ),
                     ),
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: Container(
-                        child: IconButton(
-                          icon: Icon(Icons.delete),
-                          iconSize: 30,
-                          color: Colors.black,
-                          onPressed: () {
-                            Get.to(UpdateScreen(),
-                                arguments: data.data![positioned]);
-                          },
-                        ),
-                      ),
-                    )
                   ],
                 ),
-                // Container(
-                //   margin: EdgeInsets.only(
-                //     top: 10,
-                //   ),
-                //   decoration: BoxDecoration(
-                //     color: Color(0xFFedd09f),
-                //     borderRadius: BorderRadius.circular(20),
-                //   ),
-                //   height: 200,
-                //   width: double.infinity,
-                //   child: Padding(
-                //     padding: EdgeInsets.only(
-                //         left: 15, right: 10, top: 16, bottom: 5),
-                //     child: Container(
-                //       padding: EdgeInsets.only(right: 10),
-                //       child: Row(
-                //         crossAxisAlignment: CrossAxisAlignment.start,
-                //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //         children: [
-                //           Expanded(
-                //             child: Text(
-                //               data.data![positioned].title,
-                //               maxLines: 2,
-                //               style: TextStyle(
-                //                 fontSize: 20,
-                //                 fontWeight: FontWeight.bold,
-                //                 color: Color(0xff2b7379),
-                //               ),
-                //             ),
-                //           ),
-                //           Row(
-                //             children: [
-                //               Container(
-                //                 width: 30,
-                //                 height: 30,
-                //                 color: Colors.white60,
-                //                 child: Center(
-                //                   child: Icon(
-                //                     getWeather(data.data![positioned].weather),
-                //                   ),
-                //                 ),
-                //               ),
-                //               SizedBox(width: 6),
-                //               Container(
-                //                 width: 30,
-                //                 height: 30,
-                //                 color: Colors.white60,
-                //                 child: Center(
-                //                   child: Icon(
-                //                     getEmoji(data.data![positioned].emoji),
-                //                   ),
-                //                 ),
-                //               )
-                //             ],
-                //           ),
-                //         ],
-                //       ),
-                //     ),
-                //   ),
-                // ),
-                // Positioned(
-                //   top: 75,
-                //   bottom: 0,
-                //   left: 0,
-                //   right: 0,
-                //   child: Container(
-                //     decoration: BoxDecoration(
-                //       borderRadius: BorderRadius.only(
-                //         bottomLeft: Radius.circular(20),
-                //         bottomRight: Radius.circular(20),
-                //       ),
-                //       color: Colors.white,
-                //     ),
-                //     height: 150,
-                //     child: Padding(
-                //       padding: EdgeInsets.only(right: 10, left: 10, top: 15),
-                //       child: Expanded(
-                //         child: Column(
-                //           children: [
-                //             Row(
-                //               mainAxisAlignment: MainAxisAlignment.start,
-                //               crossAxisAlignment: CrossAxisAlignment.start,
-                //               children: [
-                //                 Expanded(
-                //                   child: Container(
-                //                     width: 230,
-                //                     child: Text(
-                //                       data.data![positioned].description,
-                //                       maxLines: 3,
-                //                       overflow: TextOverflow.ellipsis,
-                //                       style: TextStyle(
-                //                           fontSize: 16, color: Colors.grey),
-                //                     ),
-                //                   ),
-                //                 ),
-                //                 SizedBox(
-                //                   width: 10,
-                //                 ),
-                //                 Container(
-                //                   child: Image.asset(
-                //                     'assets/pngs/avatar.png',
-                //                     width: 60,
-                //                     height: 60,
-                //                     fit: BoxFit.fill,
-                //                   ),
-                //                 ),
-                //               ],
-                //             ),
-                //             Padding(
-                //               padding: EdgeInsets.only(top: 10),
-                //               child: Row(
-                //                 crossAxisAlignment: CrossAxisAlignment.start,
-                //                 mainAxisAlignment: MainAxisAlignment.start,
-                //                 children: [
-                //                   Icon(Icons.date_range_outlined),
-                //                   SizedBox(
-                //                     width: 10,
-                //                   ),
-                //                   Text(
-                //                     data.data![positioned].dueDate
-                //                         .substring(0, 10),
-                //                   ),
-                //                 ],
-                //               ),
-                //             ),
-                //           ],
-                //         ),
-                //       ),
-                //     ),
-                //   ),
-                // ),
               ),
             ),
-
-            //  ListTile(
-            //   title: Text(data.data![positioned].title),
-            //   subtitle: Text(data.data![positioned].description),
-            // ),
           );
         } else {
           return Text('Error');
