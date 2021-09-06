@@ -1,24 +1,37 @@
 import 'dart:io';
 
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 
 import 'package:image_picker/image_picker.dart';
+import 'package:journaling_app/database/data.dart';
 
 import 'package:journaling_app/src/dialogs/ConfirmUpdatedialog.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({Key? key}) : super(key: key);
-
   @override
   _EditProfileScreenState createState() => _EditProfileScreenState();
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
+  Profile profile = Get.arguments;
+
+  TextEditingController firstName = TextEditingController();
+  TextEditingController lastName = TextEditingController();
+  TextEditingController city = TextEditingController();
+  TextEditingController country = TextEditingController();
   File? bgimage;
   File? profileimage;
+  _EditProfileScreenState() {
+    firstName.text = profile.firstName;
+    lastName.text = profile.lastName;
+    city.text = profile.city;
+    country.text = profile.country;
+    bgimage = File(profile.bgImage);
+    profileimage = File(profile.profileImage);
+  }
   ConfirmUpdatedialog dialog = new ConfirmUpdatedialog();
   Future pickBackGroundImage() async {
     try {
@@ -48,10 +61,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
-  TextEditingController firstName = TextEditingController();
-  TextEditingController lastName = TextEditingController();
-  TextEditingController city = TextEditingController();
-  TextEditingController country = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,14 +83,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         children: [
                           Container(
                             height: 200.0,
-                            child: bgimage == null
-                                ? Text("No image selected")
-                                : Center(
-                                    child: Image.file(
-                                    bgimage!,
-                                    width: double.infinity,
-                                    fit: BoxFit.fill,
-                                  )),
+                            child: Center(
+                                child: Image.file(
+                              bgimage!,
+                              width: double.infinity,
+                              fit: BoxFit.fill,
+                            )),
                           ),
                           Container(
                             height: 200.0,
@@ -104,7 +111,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               children: [
                                 IconButton(
                                     onPressed: () {
-                                      AutoRouter.of(context).pop();
+                                      Get.back();
                                     },
                                     icon: Icon(
                                       Icons.keyboard_arrow_left,
@@ -133,16 +140,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 child: Stack(
                                   children: [
                                     Container(
-                                      decoration:
-                                          BoxDecoration(shape: BoxShape.circle),
-                                      child: ClipRRect(
+                                        height: 100.0,
+                                        width: 100.0,
+                                        child: ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(100),
-                                          child: profileimage == null
-                                              ? Image.asset(
-                                                  'assets/pngs/avatar.png')
-                                              : Image.file(profileimage!)),
-                                    ),
+                                          child: Image.file(
+                                            profileimage!,
+                                            fit: BoxFit.fill,
+                                          ),
+                                        )),
                                     Positioned(
                                       right: 20,
                                       top: 70,
@@ -187,8 +194,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     margin: new EdgeInsets.only(right: 20),
                                     height: 50,
                                     width: 300,
-                                    child: TextField(
+                                    child: TextFormField(
                                       controller: firstName,
+                                      onFieldSubmitted: (val) {
+                                        firstName.text = val;
+                                      },
                                       decoration: InputDecoration(
                                           fillColor: Color(0xffF1F1F1),
                                           filled: true,
@@ -201,7 +211,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           hintText: 'Enter your first name'),
                                     ),
                                   ),
-                                  SizedBox(height: 30),
+                                  SizedBox(height: 20),
                                   Container(
                                       width: 100,
                                       child: Text(
@@ -230,7 +240,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                       controller: lastName,
                                     ),
                                   ),
-                                  SizedBox(height: 30),
+                                  SizedBox(height: 20),
                                   Container(
                                       width: 100,
                                       child: Text(
@@ -259,7 +269,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                       controller: country,
                                     ),
                                   ),
-                                  SizedBox(height: 30),
+                                  SizedBox(height: 20),
                                   Container(
                                       width: 100,
                                       child: Text(
@@ -288,14 +298,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                       controller: city,
                                     ),
                                   ),
-                                  SizedBox(height: 30),
+                                  SizedBox(height: 20),
                                   Container(
                                     margin: new EdgeInsets.only(left: 130),
                                     child: Row(children: [
                                       Container(
                                         child: ElevatedButton(
                                           onPressed: () {
-                                            AutoRouter.of(context).pop();
+                                            Get.back();
                                           },
                                           style: ElevatedButton.styleFrom(
                                             primary: Colors.white,

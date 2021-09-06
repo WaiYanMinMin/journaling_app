@@ -1,11 +1,13 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:journaling_app/database/data.dart';
 import 'package:journaling_app/database/notedao.dart';
-import 'package:journaling_app/src/routers/router.gr.dart';
+
+import 'package:journaling_app/src/screens/Profile.dart';
+import 'package:journaling_app/src/screens/calendar.dart';
+import 'package:journaling_app/src/screens/create.dart';
 import 'package:journaling_app/src/screens/detail_screen.dart';
 
 import 'update_story.dart';
@@ -85,13 +87,13 @@ class _HomeScreenState extends State<HomeScreen> {
             });
 
             if (_page == 3) {
-              AutoRouter.of(context).replace(ProfileRoute());
+              Get.off(ProfileScreen());
             } else if (_page == 2) {
-              AutoRouter.of(context).replace(CalendarRoute());
+              Get.off(CalendarScreen());
             } else if (_page == 1) {
-              AutoRouter.of(context).replace(CreateRoute());
+              Get.off(CreateScreen());
             } else {
-              AutoRouter.of(context).replace(HomeRoute());
+              Get.off(HomeScreen());
             }
           },
         ),

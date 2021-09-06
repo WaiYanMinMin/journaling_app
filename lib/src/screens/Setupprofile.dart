@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -124,14 +123,16 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
                                 child: Stack(
                                   children: [
                                     Container(
-                                      decoration:
-                                          BoxDecoration(shape: BoxShape.circle),
+                                      width: 100,
+                                      height: 100,
                                       child: ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(100),
                                           child: profileimage == null
                                               ? Image.asset(
-                                                  'assets/pngs/avatar.png')
+                                                  'assets/pngs/avatar.png',
+                                                  fit: BoxFit.fill,
+                                                )
                                               : Image.file(profileimage!)),
                                     ),
                                     Positioned(
@@ -191,7 +192,7 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
                                             hintText: 'Enter your first name'),
                                         controller: firstName),
                                   ),
-                                  SizedBox(height: 30),
+                                  SizedBox(height: 20),
                                   Container(
                                       width: 100,
                                       child: Text(
@@ -220,7 +221,7 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
                                       controller: lastName,
                                     ),
                                   ),
-                                  SizedBox(height: 30),
+                                  SizedBox(height: 20),
                                   Container(
                                       width: 100,
                                       child: Text(
@@ -249,7 +250,7 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
                                       controller: country,
                                     ),
                                   ),
-                                  SizedBox(height: 30),
+                                  SizedBox(height: 20),
                                   Container(
                                       width: 100,
                                       child: Text(
@@ -278,7 +279,7 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
                                       controller: city,
                                     ),
                                   ),
-                                  SizedBox(height: 30),
+                                  SizedBox(height: 20),
                                   Container(
                                     margin: new EdgeInsets.only(left: 130),
                                     child: Row(children: [

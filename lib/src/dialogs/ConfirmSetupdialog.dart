@@ -30,7 +30,7 @@ class ConfirmSetupdialog {
             actions: [
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  Get.back();
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Colors.white,
@@ -47,7 +47,7 @@ class ConfirmSetupdialog {
                 onPressed: () {
                   profileDao.createProfile(Profile(firstname, lastname, city,
                       country, bgImage, profileImage,1));
-                  Get.to(MyApp());
+                  Get.offAll(MyApp());
                 }, //save data to database
                 child: Text(
                   "Yes",

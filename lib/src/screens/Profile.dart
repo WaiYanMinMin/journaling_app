@@ -1,15 +1,16 @@
 import 'dart:io';
 
-import 'package:auto_route/auto_route.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:journaling_app/database/data.dart';
 import 'package:journaling_app/database/notedao.dart';
-import 'package:journaling_app/src/dialogs/ConfirmUpdatedialog.dart';
-import 'package:journaling_app/src/routers/router.gr.dart';
 import 'package:journaling_app/src/screens/EditProfile.dart';
+
+import 'package:journaling_app/src/screens/calendar.dart';
+import 'package:journaling_app/src/screens/create.dart';
+import 'package:journaling_app/src/screens/home.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -55,13 +56,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             });
 
             if (_page == 3) {
-              AutoRouter.of(context).replace(ProfileRoute());
+              Get.off(ProfileScreen());
             } else if (_page == 2) {
-              AutoRouter.of(context).replace(CalendarRoute());
+              Get.off(CalendarScreen());
             } else if (_page == 1) {
-              AutoRouter.of(context).replace(CreateRoute());
+              Get.off(CreateScreen());
             } else {
-              AutoRouter.of(context).replace(HomeRoute());
+              Get.off(HomeScreen());
             }
           },
         ),
@@ -261,11 +262,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: Container(
                       height: 100.0,
                       width: 100.0,
-                      decoration: BoxDecoration(shape: BoxShape.circle),
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(100),
                           child: data.hasData
-                              ? Image.file(File(data.data!.profileImage))
+                              ? Image.file(
+                                  File(data.data!.profileImage),
+                                  fit: BoxFit.fill,
+                                )
                               : Text("Choose image")),
                     ),
                   ),
@@ -277,7 +280,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       height: 50,
                       child: IconButton(
                         onPressed: () {
-                          Get.to(EditProfileScreen());
+                          Get.to(EditProfileScreen(), arguments: data.data!);
                         },
                         icon: FaIcon(
                           FontAwesomeIcons.edit,

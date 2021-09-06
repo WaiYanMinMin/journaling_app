@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:auto_route/auto_route.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -9,7 +8,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:journaling_app/database/data.dart';
 import 'package:journaling_app/database/notedao.dart';
-import 'package:journaling_app/src/routers/router.gr.dart';
+
+import 'package:journaling_app/src/screens/Profile.dart';
+
+import 'calendar.dart';
+import 'home.dart';
 
 class CreateScreen extends StatefulWidget {
   const CreateScreen({Key? key}) : super(key: key);
@@ -102,14 +105,14 @@ class _CreateScreenState extends State<CreateScreen> {
           });
 
           if (_page == 3) {
-            AutoRouter.of(context).replace(ProfileRoute());
-          } else if (_page == 2) {
-            AutoRouter.of(context).replace(CalendarRoute());
-          } else if (_page == 1) {
-            AutoRouter.of(context).replace(CreateRoute());
-          } else {
-            AutoRouter.of(context).replace(HomeRoute());
-          }
+              Get.off(ProfileScreen());
+            } else if (_page == 2) {
+              Get.off(CalendarScreen());
+            } else if (_page == 1) {
+             Get.off(CreateScreen());
+            } else {
+              Get.off(HomeScreen());
+            }
         },
       ),
       body: SingleChildScrollView(
@@ -330,7 +333,7 @@ class _CreateScreenState extends State<CreateScreen> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      AutoRouter.of(context).push(HomeRoute());
+                      Get.replace(HomeScreen());
                       //print(titlecontroller.text);
                       // Get.back();
                       noteDao.addNote(

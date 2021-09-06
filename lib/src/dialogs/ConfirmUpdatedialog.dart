@@ -1,10 +1,8 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:journaling_app/database/data.dart';
 import 'package:journaling_app/database/notedao.dart';
-import 'package:journaling_app/src/routers/router.gr.dart';
 
 import 'package:journaling_app/src/screens/Profile.dart';
 
@@ -30,7 +28,7 @@ class ConfirmUpdatedialog {
             actions: [
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  Get.back();
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Colors.white,
@@ -47,7 +45,7 @@ class ConfirmUpdatedialog {
                 onPressed: () {
                   profileDao.updateProfile(Profile(firstname, lastname, city,
                       country, bgImage, profileImage, 1));
-                   Get.to(ProfileScreen());
+                  Get.offAll(ProfileScreen());
                 }, //update data to database
                 child: Text(
                   "Yes",

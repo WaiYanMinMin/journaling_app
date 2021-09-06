@@ -3,6 +3,7 @@ import 'package:get/route_manager.dart';
 import 'package:get/instance_manager.dart';
 import 'package:is_first_run/is_first_run.dart';
 import 'package:journaling_app/src/screens/Setupprofile.dart';
+import 'package:journaling_app/src/screens/onboardingscreens/startscreen.dart';
 
 import 'database/note_database.dart';
 import 'src/App.dart';
@@ -38,7 +39,7 @@ class _MyHomeState extends State<MyHome> {
           Get.put(data.data!.noteDao);
           Get.put(data.data!.profileDao);
           if (_isFirstRun == true) {
-            return SetupProfileScreen();
+            return StartScreen();
           }
           return MyApp();
         } else if (data.hasError) {
