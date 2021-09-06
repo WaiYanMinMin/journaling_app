@@ -45,11 +45,9 @@ class ConfirmUpdatedialog {
                 onPressed: () {
                   profileDao.updateProfile(Profile(firstname, lastname, city,
                       country, bgImage, profileImage, 1));
-<<<<<<< HEAD
+
                   Get.offAll(ProfileScreen());
-=======
                   Get.to(ProfileScreen());
->>>>>>> d9ad3145057e6f81eebf84fbb0857675bc4a4aec
                 }, //update data to database
                 child: Text(
                   "Yes",

@@ -1,9 +1,8 @@
-<<<<<<< HEAD
-=======
+
+
 import 'dart:io';
 
-import 'package:auto_route/auto_route.dart';
->>>>>>> d9ad3145057e6f81eebf84fbb0857675bc4a4aec
+
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
