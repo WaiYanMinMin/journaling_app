@@ -1,19 +1,25 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:journaling_app/src/screens/update_story.dart';
 
 class DetailScreen extends StatelessWidget {
   // final NoteDao noteDao = Get.find();
   // Note note = Get.arguments;
-
+  final int id;
   final String title;
   final String description;
+  final String photo;
   final int selectedEmoji;
   final int selectedWeather;
   final String dueDate;
 
   DetailScreen(
-      {required this.title,
+      {required this.id,
+      required this.title,
       required this.description,
+      required this.photo,
       required this.selectedEmoji,
       required this.selectedWeather,
       required this.dueDate});
@@ -146,7 +152,7 @@ class DetailScreen extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 17, vertical: 5),
                 child: Container(
-                  padding: EdgeInsets.only(top: 10),
+                  padding: EdgeInsets.only(top: 5),
                   height: 30,
                   width: MediaQuery.of(context).size.width,
                   //color: Colors.white12,
@@ -174,6 +180,16 @@ class DetailScreen extends StatelessWidget {
                       bottomLeft: Radius.circular(15),
                     ),
                   ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(15),
+                      bottomLeft: Radius.circular(15),
+                    ),
+                    child: Image.file(
+                      File(photo),
+                      fit: BoxFit.fill,
+                    ),
+                  ),
                 ),
               ),
               Padding(
@@ -198,13 +214,19 @@ class DetailScreen extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 15, right: 15, bottom: 20),
                 child: GestureDetector(
                   onTap: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (_) => UpdateScreen(
-                    //         updateTitle: title, updateDescription: description),
-                    //   ),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => UpdateScreen(
+                            title: title,
+                            id: id,
+                            description: description,
+                            photo: photo,
+                            dueDate: dueDate,
+                            emoji: selectedEmoji,
+                            weather: selectedWeather),
+                      ),
+                    );
                   },
                   child: Container(
                     height: 40,

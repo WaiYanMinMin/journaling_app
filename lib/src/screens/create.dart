@@ -340,7 +340,7 @@ class _CreateScreenState extends State<CreateScreen> {
                         Note(
                           title: titlecontroller.text,
                           description: descriptioncontroller.text,
-                          photo: imageFile!.path, //added image to database
+                          photo: imageFile!.path,
                           emoji: selectedIndex,
                           weather: selectedIndexWeather,
                           dueDate: _formatDate.toString(),

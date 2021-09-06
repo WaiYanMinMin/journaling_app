@@ -6,6 +6,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:journaling_app/database/data.dart';
 import 'package:journaling_app/database/notedao.dart';
+<<<<<<< HEAD
+=======
+import 'package:journaling_app/src/routers/router.gr.dart';
+>>>>>>> d9ad3145057e6f81eebf84fbb0857675bc4a4aec
 import 'package:journaling_app/src/screens/EditProfile.dart';
 
 import 'package:journaling_app/src/screens/calendar.dart';
