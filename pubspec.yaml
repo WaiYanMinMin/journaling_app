@@ -44,7 +44,7 @@ dependencies:
   provider: ^6.0.0
   image_cropper: ^1.4.1
   shared_preferences: ^2.0.7
-  
+  syncfusion_flutter_calendar: ^19.2.62
 dev_dependencies:
   auto_route_generator: any
   build_runner: any

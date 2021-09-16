@@ -6,6 +6,7 @@ import 'package:get/route_manager.dart';
 import 'package:get/instance_manager.dart';
 import 'package:is_first_run/is_first_run.dart';
 import 'package:journaling_app/src/screens/BuildProvider.dart';
+import 'package:journaling_app/src/screens/calendar.dart';
 import 'package:journaling_app/src/screens/onboardingscreens/onboardingscreen.dart';
 import 'package:journaling_app/src/screens/utils/user_simple_preference.dart';
 
@@ -18,7 +19,7 @@ Future main() async {
     DeviceOrientation.portraitDown,
   ]);
   await UserSimplePreferences.init();
-  runApp(MyHome());
+  runApp(CalendarScreen());
 }
 
 class MyHome extends StatefulWidget {
@@ -65,3 +66,4 @@ class _MyHomeState extends State<MyHome> {
     ));
   }
 }
+
