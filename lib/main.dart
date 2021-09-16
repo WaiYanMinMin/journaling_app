@@ -1,15 +1,23 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
 import 'package:get/route_manager.dart';
 import 'package:get/instance_manager.dart';
 import 'package:is_first_run/is_first_run.dart';
+import 'package:journaling_app/src/screens/BuildProvider.dart';
 import 'package:journaling_app/src/screens/onboardingscreens/onboardingscreen.dart';
+import 'package:journaling_app/src/screens/utils/user_simple_preference.dart';
 
 import 'database/note_database.dart';
-import 'l2n/l2n.dart';
-import 'src/App.dart';
 
-void main() {
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+  await UserSimplePreferences.init();
   runApp(MyHome());
 }
 
@@ -22,10 +30,8 @@ class _MyHomeState extends State<MyHome> {
   bool? _isFirstRun;
 
   void _checkFirstRun() async {
-    
     bool ifr = await IsFirstRun.isFirstRun();
     setState(() {
-      print(ifr);
       _isFirstRun = ifr;
     });
   }
@@ -33,7 +39,7 @@ class _MyHomeState extends State<MyHome> {
   @override
   Widget build(BuildContext context) {
     _checkFirstRun();
-    supportedLocales:L2n.all;
+
     return GetMaterialApp(
         home: FutureBuilder<NoteDatabase>(
       future: $FloorNoteDatabase.databaseBuilder('note.db').build(),
@@ -44,7 +50,7 @@ class _MyHomeState extends State<MyHome> {
           if (_isFirstRun == true) {
             return StartScreen();
           }
-          return MyApp();
+          return BuildProvider();
         } else if (data.hasError) {
           return Text('${data.error}');
         } else {

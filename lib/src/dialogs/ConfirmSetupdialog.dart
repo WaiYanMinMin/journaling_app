@@ -6,6 +6,7 @@ import 'package:journaling_app/database/data.dart';
 import 'package:journaling_app/database/notedao.dart';
 
 import 'package:journaling_app/src/App.dart';
+import 'package:journaling_app/src/screens/BuildProvider.dart';
 
 
 class ConfirmSetupdialog {
@@ -46,8 +47,8 @@ class ConfirmSetupdialog {
                 ),
                 onPressed: () {
                   profileDao.createProfile(Profile(firstname, lastname, city,
-                      country, bgImage, profileImage,1));
-                  Get.offAll(MyApp());
+                      country, bgImage, profileImage,1,"English"));
+                  Get.offAll(BuildProvider());
                 }, //save data to database
                 child: Text(
                   "Yes",

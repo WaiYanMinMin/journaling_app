@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -8,10 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:journaling_app/database/data.dart';
 import 'package:journaling_app/database/notedao.dart';
-
-import 'package:journaling_app/src/screens/Profile.dart';
-
-import 'calendar.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'home.dart';
 
 class CreateScreen extends StatefulWidget {
@@ -22,9 +17,7 @@ class CreateScreen extends StatefulWidget {
 }
 
 class _CreateScreenState extends State<CreateScreen> {
-  int _page = 0;
   var selectedDate = DateTime.now();
-
   int selectedIndex = 1;
   int selectedIndexWeather = 1;
   File? imageFile;
@@ -47,8 +40,13 @@ class _CreateScreenState extends State<CreateScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double? width = 80;
     final NoteDao noteDao = Get.find();
-
+    if (AppLocalizations.of(context)?.language == "English") {
+      width = 80;
+    } else {
+      width = 100;
+    }
     String _formatDate = DateFormat.yMMMMEEEEd().format(selectedDate);
 
     //
@@ -77,44 +75,6 @@ class _CreateScreenState extends State<CreateScreen> {
 
     return Scaffold(
       backgroundColor: Color(0xFF2b7379),
-      bottomNavigationBar: CurvedNavigationBar(
-        index: 1,
-        color: Color(0xff67A9A9),
-        backgroundColor: Color(0xff2B7279),
-        items: [
-          Icon(
-            FontAwesomeIcons.home,
-            color: Colors.white,
-          ),
-          Icon(
-            FontAwesomeIcons.plus,
-            color: Colors.white,
-          ),
-          Icon(
-            FontAwesomeIcons.calendarAlt,
-            color: Colors.white,
-          ),
-          Icon(
-            FontAwesomeIcons.userAlt,
-            color: Colors.white,
-          ),
-        ],
-        onTap: (index) {
-          setState(() {
-            _page = index;
-          });
-
-          if (_page == 3) {
-              Get.off(ProfileScreen());
-            } else if (_page == 2) {
-              Get.off(CalendarScreen());
-            } else if (_page == 1) {
-             Get.off(CreateScreen());
-            } else {
-              Get.off(HomeScreen());
-            }
-        },
-      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 0),
@@ -122,7 +82,7 @@ class _CreateScreenState extends State<CreateScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                color: Colors.red,
+                color: Color(0xff67A9A9),
                 child: InkWell(
                   onTap: () {
                     datePicker(context);
@@ -202,7 +162,7 @@ class _CreateScreenState extends State<CreateScreen> {
                           child: FaIcon(
                             emoList[index],
                             color: selectedIndex == index
-                                ? Colors.black
+                                ? Color(0xff67A9A9)
                                 : Colors.white24,
                           ),
                         ),
@@ -245,7 +205,7 @@ class _CreateScreenState extends State<CreateScreen> {
                           child: FaIcon(
                             weatherList[index],
                             color: selectedIndexWeather == index
-                                ? Colors.black
+                                ? Color(0xff67A9A9)
                                 : Colors.white24,
                           ),
                         ),
@@ -260,7 +220,7 @@ class _CreateScreenState extends State<CreateScreen> {
               Padding(
                 padding: const EdgeInsets.only(left: 15, top: 30),
                 child: Text(
-                  'Title',
+                  AppLocalizations.of(context)?.title ?? "Title",
                   style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w500,
@@ -272,7 +232,8 @@ class _CreateScreenState extends State<CreateScreen> {
                 child: TextField(
                   controller: titlecontroller,
                   decoration: InputDecoration(
-                    hintText: 'Enter the title name...',
+                    hintText: AppLocalizations.of(context)?.titlehint ??
+                        "Enter the title name",
                     hintStyle: TextStyle(
                       color: Colors.white54,
                       fontSize: 15,
@@ -280,14 +241,14 @@ class _CreateScreenState extends State<CreateScreen> {
                     border: InputBorder.none,
                   ),
                   style: TextStyle(
-                    color: Color(0xFFedd09f),
+                    color: Colors.white,
                   ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 15, top: 20),
                 child: Text(
-                  'Story',
+                  AppLocalizations.of(context)?.story ?? "Story",
                   style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w500,
@@ -298,9 +259,10 @@ class _CreateScreenState extends State<CreateScreen> {
                 padding: const EdgeInsets.only(left: 20, right: 15),
                 child: TextField(
                   controller: descriptioncontroller,
-                  maxLines: 10,
+                  maxLines: 9,
                   decoration: InputDecoration(
-                    hintText: 'What about your today',
+                    hintText: AppLocalizations.of(context)?.storyhint ??
+                        "Write about your story",
                     hintStyle: TextStyle(
                       color: Colors.white54,
                       fontSize: 15,
@@ -310,65 +272,42 @@ class _CreateScreenState extends State<CreateScreen> {
                   style: TextStyle(color: Colors.grey[200]),
                 ),
               ),
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Spacer(),
-                  Container(
-                    width: 80,
-                    padding: EdgeInsets.all(15.0),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.white,
+              
+              GestureDetector(
+                onTap: () {
+                  Get.replace(HomeScreen());
+                  //print(titlecontroller.text);
+                  // Get.back();
+                  noteDao.addNote(
+                    Note(
+                      title: titlecontroller.text,
+                      description: descriptioncontroller.text,
+                      photo: imageFile?.path ?? 'null',
+                      emoji: selectedIndex,
+                      weather: selectedIndexWeather,
+                      dueDate: _formatDate.toString(),
                     ),
-                    child: Center(
-                      child: Text(
-                        'Cancel',
-                        style: TextStyle(
+                  );
+                 
+                },
+                child: Container(
+                  width: width,
+                  margin: EdgeInsets.only(left:270),
+                  padding: EdgeInsets.all(15.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Color(0xff67A9A9),
+                  ),
+                  child: Center(
+                    child: Text(
+                      AppLocalizations.of(context)?.save ?? "Save",
+                      style: TextStyle(
                           color: Color(0xFF2b7379),
-                        ),
-                      ),
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      Get.replace(HomeScreen());
-                      //print(titlecontroller.text);
-                      // Get.back();
-                      noteDao.addNote(
-                        Note(
-                          title: titlecontroller.text,
-                          description: descriptioncontroller.text,
-                          photo: imageFile!.path,
-                          emoji: selectedIndex,
-                          weather: selectedIndexWeather,
-                          dueDate: _formatDate.toString(),
-                        ),
-                      );
-                      print('Image: $imageFile');
-                      refreshAll();
-                    },
-                    child: Container(
-                      width: 80,
-                      margin: EdgeInsets.only(right: 15, left: 10),
-                      padding: EdgeInsets.all(15.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Color(0xFFedd09f),
-                      ),
-                      child: Center(
-                        child: Text(
-                          'Save',
-                          style: TextStyle(
-                              color: Color(0xFF2b7379),
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               )
             ],
           ),

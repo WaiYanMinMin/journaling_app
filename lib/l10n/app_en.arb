@@ -1,0 +1,98 @@
+{   
+
+
+    "language":"English",
+    "@language":{
+      "description": "chosen language English"
+    },
+    "languages": "Languages",
+    "@languages":{
+      "description": "choosing language"
+    },
+    "settings":"Settings",
+    "@settings":{
+      "description": "Settings"
+    },
+    "eraseAll": "Erase all memories",
+    "@eraseAll":{
+      "description": "deleting all from database"
+    },
+    "editProfile": "Edit Profile",
+    "@editProfile":{
+      "description": "editing profile"
+    },
+    "setupProfile": "Setup Profile",
+    "@setupProfile":{
+      "description": "setting up profile"
+    },
+    "firstName": "First Name",
+    "@firstName":{
+      "description": "title first name"
+    },
+    "enterFirstName": "Enter your first name",
+    "@enterFirstName":{
+      "description": "entering first name"
+    },
+    "lastName": "Last Name",
+    "@lastName":{
+      "description": "title last name"
+    },
+    "enterLastName": "Enter yout last name",
+    "@enterLastName":{
+      "description": "entering last name"
+    },
+    "city": "City",
+    "@city":{
+      "description": "title city"
+    },
+    "enterCity": "Enter your city",
+    "@EnterCity":{
+      "description": "entering city"
+    },
+    "country": "Country",
+    "@country":{
+      "description": "title city"
+    },
+    "enterCountry": "Enter your country",
+    "@enterCountry":{
+      "description": "entering country"
+    },
+    "save": "Save",
+    "@save":{
+      "description": "saving button"
+    },
+    "cancel": "Cancel",
+    "@cancel":{
+      "description": "canceling button"
+    },
+    "yes": "Yes",
+    "@yes":{
+      "description": "confirming button"
+    },
+    "searchHint":"Enter the name of entry you  want tosearch",
+    "@searchHint":{
+      "description": "search hint text"
+    },
+    "allEntries":"All Entries",
+    "@allEntries":{
+      "description": "all entries"
+    },
+    "title":"Title",
+    "@title":{
+      "description": "title"
+    },
+    "titlehint":"Enter the title name",
+    "@titlehint":{
+      "description": "title hint text"
+    },
+    "story":"Story",
+    "@story":{
+      "description": "Story title"
+    },
+    "storyhint":"Write about your story",
+    "@storyhint":{
+      "description": "story hint text"
+    }
+    
+    
+}

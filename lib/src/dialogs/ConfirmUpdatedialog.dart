@@ -16,7 +16,8 @@ class ConfirmUpdatedialog {
       String city,
       String country,
       String bgImage,
-      String profileImage) {
+      String profileImage,
+      String languagechosen) {
     return showDialog(
         context: context,
         barrierDismissible: true,
@@ -34,7 +35,13 @@ class ConfirmUpdatedialog {
                   primary: Colors.white,
                 ),
                 child: Text(
-                  "Cancel",
+                  (() {
+                    if (languagechosen == "English") {
+                      return "Cancel";
+                    } else {
+                      return "ပြန်ပြင်ရန်";
+                    }
+                  }()),
                   style: TextStyle(color: Color(0xff67A9A9)),
                 ),
               ),
@@ -44,13 +51,18 @@ class ConfirmUpdatedialog {
                 ),
                 onPressed: () {
                   profileDao.updateProfile(Profile(firstname, lastname, city,
-                      country, bgImage, profileImage, 1));
+                      country, bgImage, profileImage, 1, languagechosen));
 
-                  Get.offAll(ProfileScreen());
-                  Get.to(ProfileScreen());
+                  Get.close(2);
                 }, //update data to database
                 child: Text(
-                  "Yes",
+                   (() {
+                    if (languagechosen == "English") {
+                      return "Yes";
+                    } else {
+                      return "သေချာပြီ";
+                    }
+                  }()),
                 ),
               )
             ],

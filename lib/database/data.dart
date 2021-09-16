@@ -33,8 +33,8 @@ class Profile {
   String country;
   String bgImage;
   String profileImage;
-
+  String language;
   Profile(this.firstName, this.lastName, this.city, this.country, this.bgImage,
       this.profileImage,
-      this.id);
+      this.id,this.language);
 }

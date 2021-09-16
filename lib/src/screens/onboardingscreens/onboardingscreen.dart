@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:journaling_app/src/App.dart';
+
 import 'package:journaling_app/src/screens/Setupprofile.dart';
 
 class StartScreen extends StatelessWidget {

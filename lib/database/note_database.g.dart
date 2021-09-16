@@ -85,7 +85,7 @@ class _$NoteDatabase extends NoteDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `note` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT NOT NULL, `description` TEXT NOT NULL, `photo` TEXT NOT NULL, `emoji` INTEGER NOT NULL, `weather` INTEGER NOT NULL, `dueDate` TEXT NOT NULL)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `profile` (`id` INTEGER, `profiletitle` TEXT NOT NULL, `lastName` TEXT NOT NULL, `city` TEXT NOT NULL, `country` TEXT NOT NULL, `bgImage` TEXT NOT NULL, `profileImage` TEXT NOT NULL, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `profile` (`id` INTEGER, `profiletitle` TEXT NOT NULL, `lastName` TEXT NOT NULL, `city` TEXT NOT NULL, `country` TEXT NOT NULL, `bgImage` TEXT NOT NULL, `profileImage` TEXT NOT NULL, `language` TEXT NOT NULL, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -177,6 +177,23 @@ class _$NoteDao extends NoteDao {
   }
 
   @override
+  Stream<List<Note>> searchData(String keyword) {
+    return _queryAdapter.queryListStream(
+        'select * from note where title like ?1',
+        mapper: (Map<String, Object?> row) => Note(
+            id: row['id'] as int?,
+            title: row['title'] as String,
+            description: row['description'] as String,
+            photo: row['photo'] as String,
+            emoji: row['emoji'] as int,
+            weather: row['weather'] as int,
+            dueDate: row['dueDate'] as String),
+        arguments: [keyword],
+        queryableName: 'note',
+        isView: false);
+  }
+
+  @override
   Future<void> addNote(Note note) async {
     await _noteInsertionAdapter.insert(note, OnConflictStrategy.abort);
   }
@@ -205,7 +222,8 @@ class _$ProfileDao extends ProfileDao {
                   'city': item.city,
                   'country': item.country,
                   'bgImage': item.bgImage,
-                  'profileImage': item.profileImage
+                  'profileImage': item.profileImage,
+                  'language': item.language
                 },
             changeListener),
         _profileUpdateAdapter = UpdateAdapter(
@@ -219,7 +237,8 @@ class _$ProfileDao extends ProfileDao {
                   'city': item.city,
                   'country': item.country,
                   'bgImage': item.bgImage,
-                  'profileImage': item.profileImage
+                  'profileImage': item.profileImage,
+                  'language': item.language
                 },
             changeListener);
 
@@ -243,7 +262,24 @@ class _$ProfileDao extends ProfileDao {
             row['country'] as String,
             row['bgImage'] as String,
             row['profileImage'] as String,
-            row['id'] as int?),
+            row['id'] as int?,
+            row['language'] as String),
+        queryableName: 'profile',
+        isView: false);
+  }
+
+  @override
+  Stream<Profile?> getlanguagedata() {
+    return _queryAdapter.queryStream('select language from profile',
+        mapper: (Map<String, Object?> row) => Profile(
+            row['profiletitle'] as String,
+            row['lastName'] as String,
+            row['city'] as String,
+            row['country'] as String,
+            row['bgImage'] as String,
+            row['profileImage'] as String,
+            row['id'] as int?,
+            row['language'] as String),
         queryableName: 'profile',
         isView: false);
   }
