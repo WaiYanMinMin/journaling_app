@@ -28,6 +28,8 @@ dependencies:
   floor: ^1.1.0
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   flutter_slidable_list_view: ^1.2.8
   font_awesome_flutter: ^9.1.0
   get: ^4.3.8
@@ -36,12 +38,11 @@ dependencies:
   infinite_scroll_pagination: ^3.1.0
   is_first_run: ^1.0.0
   intl: ^0.17.0
-<<<<<<< HEAD
   introduction_screen: ^2.1.0
-=======
   flutter_slidable: ^0.6.0
+  animated_splash_screen: ^1.1.0
 
->>>>>>> d9ad3145057e6f81eebf84fbb0857675bc4a4aec
+
 
 dev_dependencies:
   auto_route_generator: any
@@ -54,9 +55,7 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter.
 flutter:
-  # The following line ensures that the Material Icons font is
-  # included with your application, so that you can use the icons in
-  # the material Icons class.
+  generate: true
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
