@@ -107,7 +107,9 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
                               Container(
                                 height: 200.0,
                                 child: bgimage == null
-                                    ? Text("No image selected")
+                                    ? Center(
+                                        child: Image.asset(
+                                            "assets/pngs/bgnull.png"))
                                     : Center(
                                         child: Image.file(
                                         bgimage!,
@@ -163,7 +165,7 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
                                                   BorderRadius.circular(100),
                                               child: profileimage == null
                                                   ? Image.asset(
-                                                      'assets/pngs/avatar.png',
+                                                      'assets/pngs/profile.png',
                                                       fit: BoxFit.fill,
                                                     )
                                                   : Image.file(
@@ -331,9 +333,6 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
                                       Container(
                                         margin: new EdgeInsets.only(left: 130),
                                         child: Row(children: [
-                                          SizedBox(
-                                            width: 20,
-                                          ),
                                           Container(
                                             child: ElevatedButton(
                                               onPressed: () {
@@ -344,8 +343,10 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
                                                     lastName.text,
                                                     city.text,
                                                     country.text,
-                                                    bgimage!.path,
-                                                    profileimage!.path);
+                                                    bgimage?.path ??
+                                                        "assets/pngs/bgnull.png",
+                                                    profileimage?.path ??
+                                                        "assets/pngs/profile.png");
                                               },
                                               style: ElevatedButton.styleFrom(
                                                 primary: Color(0xff67A9A9),

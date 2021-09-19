@@ -10,6 +10,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:journaling_app/database/data.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:journaling_app/src/dialogs/ConfirmUpdatedialog.dart';
+import 'package:journaling_app/src/screens/utils/user_simple_preference.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class EditProfileScreen extends StatefulWidget {
   @override
@@ -17,8 +19,15 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
+  String? color;
+  @override
+  void initState() {
+    super.initState();
+    color = UserSimplePreferences.getColor();
+  }
+
   bool _inProcess = false;
-  Profile profile = Get.arguments;
+  Profile profile = Get.arguments ?? Profile("", "", "", "", "null", "null", 1);
 
   TextEditingController firstName = TextEditingController();
   TextEditingController lastName = TextEditingController();
@@ -27,13 +36,29 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   File? bgimage;
   File? profileimage;
 
+  late int primaryColor;
+  late int secondaryColor;
+  double? sizedboxwidthmy = 20;
+  double? sizedboxwidthen = 150;
   _EditProfileScreenState() {
     firstName.text = profile.firstName;
     lastName.text = profile.lastName;
     city.text = profile.city;
     country.text = profile.country;
-    bgimage = File(profile.bgImage);
-    profileimage = File(profile.profileImage);
+    bgimage = ((() {
+      if (profile.bgImage == "null") {
+        return null;
+      } else {
+        return File(profile.bgImage);
+      }
+    }()));
+    profileimage = ((() {
+      if (profile.profileImage == "null") {
+        return null;
+      } else {
+        return File(profile.profileImage);
+      }
+    }()));
   }
   ConfirmUpdatedialog dialog = new ConfirmUpdatedialog();
   Future pickBackGroundImage() async {
@@ -65,9 +90,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           maxHeight: 100,
           compressFormat: ImageCompressFormat.jpg,
           androidUiSettings: AndroidUiSettings(
-            toolbarColor: Color(0xff2B7279),
+            toolbarColor: Color(primaryColor),
             toolbarTitle: "Crop Image",
-            statusBarColor: Color(0xff2B7279),
+            statusBarColor: Color(primaryColor),
             backgroundColor: Colors.white,
           ));
       final imageTemp = File(
@@ -88,11 +113,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (color == 'blue') {
+      secondaryColor = 0xff67A9A9;
+      primaryColor = 0xff2B7279;
+    } else if (color == 'green') {
+      secondaryColor = 0xff30db2a;
+      primaryColor = 0xff127a2e;
+    } else {
+      primaryColor = 0xffc3e02f;
+      secondaryColor = 0xff607012;
+    }
     return Scaffold(
         body: Stack(
       children: [
         Container(
-          color: Color(0xff2B7279),
+          color: Color(primaryColor),
           child: SingleChildScrollView(
               physics: ClampingScrollPhysics(),
               child: ConstrainedBox(
@@ -111,11 +146,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               Container(
                                 height: 200.0,
                                 child: Center(
-                                    child: Image.file(
-                                  bgimage!,
-                                  width: double.infinity,
-                                  fit: BoxFit.fill,
-                                )),
+                                    child: (() {
+                                  if (bgimage == null) {
+                                    return Image.asset("assets/pngs/bgnull.png",
+                                        width: double.infinity,
+                                        fit: BoxFit.fill);
+                                  } else {
+                                    return Image.file(bgimage!,
+                                        width: double.infinity,
+                                        fit: BoxFit.fill);
+                                  }
+                                }())),
                               ),
                               Container(
                                 height: 200.0,
@@ -142,19 +183,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                         },
                                         icon: Icon(
                                           Icons.keyboard_arrow_left,
-                                          color: Color(0xff67A9A9),
+                                          color: Color(primaryColor),
                                           size: 30,
                                         )),
-                                    SizedBox(
-                                      width: 80,
-                                    ),
-                                    Text(
-                                      "Edit Profile",
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          color: Color(0xff67A9A9),
-                                          fontWeight: FontWeight.w500),
-                                    )
                                   ],
                                 ),
                               ),
@@ -167,16 +198,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     child: Stack(
                                       children: [
                                         Container(
-                                            height: 100.0,
-                                            width: 100.0,
-                                            child: ClipRRect(
+                                          height: 100.0,
+                                          width: 100.0,
+                                          child: ClipRRect(
                                               borderRadius:
                                                   BorderRadius.circular(100),
-                                              child: Image.file(
-                                                profileimage!,
-                                                fit: BoxFit.fill,
-                                              ),
-                                            )),
+                                              child: (() {
+                                                if (profileimage == null) {
+                                                  return Image.asset(
+                                                      "assets/pngs/profile.png",
+                                                      fit: BoxFit.fill);
+                                                } else {
+                                                  return Image.file(
+                                                      profileimage!,
+                                                      fit: BoxFit.fill);
+                                                }
+                                              }())),
+                                        ),
                                         Positioned(
                                           right: 20,
                                           top: 70,
@@ -212,14 +250,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           height: 25,
                                           width: 100,
                                           child: Text(
-                                            (() {
-                                              if (profile.language ==
-                                                  "English") {
-                                                return "First name";
-                                              } else {
-                                                return "မိမိနာမည်";
-                                              }
-                                            }()),
+                                            AppLocalizations.of(context)
+                                                    ?.firstName ??
+                                                "First Name",
                                             style: TextStyle(
                                                 fontSize: 15,
                                                 color: Colors.white),
@@ -243,14 +276,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                                     width: 2.0),
                                                 borderRadius:
                                                     BorderRadius.circular(7.0)),
-                                            hintText: (() {
-                                              if (profile.language ==
-                                                  "English") {
-                                                return "Enter your first name";
-                                              } else {
-                                                return "မိမိနာမည်ထည့်ရန်";
-                                              }
-                                            }()),
+                                            hintText:
+                                                AppLocalizations.of(context)
+                                                        ?.enterFirstName ??
+                                                    "Enter your first name",
                                             hintStyle:
                                                 TextStyle(fontSize: 15.0),
                                           ),
@@ -261,14 +290,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           height: 30,
                                           width: 300,
                                           child: Text(
-                                            (() {
-                                              if (profile.language ==
-                                                  "English") {
-                                                return "Last name";
-                                              } else {
-                                                return "မိသားစုမျိုးရိုးနာမည်";
-                                              }
-                                            }()),
+                                            AppLocalizations.of(context)
+                                                    ?.lastName ??
+                                                "Last Name",
                                             style: TextStyle(
                                                 fontSize: 15,
                                                 color: Colors.white),
@@ -291,14 +315,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                                     width: 2.0),
                                                 borderRadius:
                                                     BorderRadius.circular(7.0)),
-                                            hintText: (() {
-                                              if (profile.language ==
-                                                  "English") {
-                                                return "Enter your last name";
-                                              } else {
-                                                return "မိသားစုမျိုးရိုးနာမည်ထည့်ရန်";
-                                              }
-                                            }()),
+                                            hintText:
+                                                AppLocalizations.of(context)
+                                                        ?.enterLastName ??
+                                                    "Enter Your Last Name",
                                             hintStyle:
                                                 TextStyle(fontSize: 15.0),
                                           ),
@@ -310,14 +330,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           height: 25,
                                           width: 100,
                                           child: Text(
-                                            (() {
-                                              if (profile.language ==
-                                                  "English") {
-                                                return "City";
-                                              } else {
-                                                return "မြို့";
-                                              }
-                                            }()),
+                                            AppLocalizations.of(context)
+                                                    ?.city ??
+                                                "City",
                                             style: TextStyle(
                                                 fontSize: 15,
                                                 color: Colors.white),
@@ -340,14 +355,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                                     width: 2.0),
                                                 borderRadius:
                                                     BorderRadius.circular(7.0)),
-                                            hintText: (() {
-                                              if (profile.language ==
-                                                  "English") {
-                                                return "Enter your city name";
-                                              } else {
-                                                return "မြို့နာမည်ထည့်ရန်";
-                                              }
-                                            }()),
+                                            hintText:
+                                                AppLocalizations.of(context)
+                                                        ?.enterCity ??
+                                                    "Enter your city",
                                             hintStyle:
                                                 TextStyle(fontSize: 15.0),
                                           ),
@@ -359,14 +370,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           height: 25,
                                           width: 100,
                                           child: Text(
-                                            (() {
-                                              if (profile.language ==
-                                                  "English") {
-                                                return "Country";
-                                              } else {
-                                                return "နိုင်ငံ";
-                                              }
-                                            }()),
+                                            AppLocalizations.of(context)
+                                                    ?.country ??
+                                                "Country",
                                             style: TextStyle(
                                                 fontSize: 15,
                                                 color: Colors.white),
@@ -389,14 +395,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                                     width: 2.0),
                                                 borderRadius:
                                                     BorderRadius.circular(7.0)),
-                                            hintText: (() {
-                                              if (profile.language ==
-                                                  "English") {
-                                                return "Enter your country name";
-                                              } else {
-                                                return "နိုင်ငံနာမည်ထည့်ရန်";
-                                              }
-                                            }()),
+                                            hintText:
+                                                AppLocalizations.of(context)
+                                                        ?.enterCountry ??
+                                                    "Enter your country",
                                             hintStyle:
                                                 TextStyle(fontSize: 15.0),
                                           ),
@@ -418,16 +420,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                                 primary: Colors.white,
                                               ),
                                               child: Text(
-                                                (() {
-                                                  if (profile.language ==
-                                                      "English") {
-                                                    return "Cancel";
-                                                  } else {
-                                                    return "ပြန်ပြင်ရန်";
-                                                  }
-                                                }()),
+                                                AppLocalizations.of(context)
+                                                        ?.cancel ??
+                                                    "Cancel",
                                                 style: TextStyle(
-                                                    color: Color(0xff67A9A9)),
+                                                    color:
+                                                        Color(secondaryColor)),
                                               ),
                                             ),
                                           ),
@@ -439,14 +437,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                               onPressed: () {
                                                 dialog.confirmationUpdate(
                                                     context,
-                                                    (() {
-                                                      if (profile.language ==
-                                                          "English") {
-                                                        return "Are you sure?";
-                                                      } else {
-                                                        return "သေချာပြီလား?";
-                                                      }
-                                                    }()),
+                                                    AppLocalizations.of(context)
+                                                            ?.confirmsure ??
+                                                        "Are You Sure?",
+                                                    color ?? 'blue',
                                                     firstName.text,
                                                     lastName.text,
                                                     city.text,
@@ -454,20 +448,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                                     bgimage?.path ?? "null",
                                                     profileimage?.path ??
                                                         "null",
-                                                    profile.language);
+                                                    AppLocalizations.of(context)
+                                                            ?.language ??
+                                                        "english");
                                               },
                                               style: ElevatedButton.styleFrom(
-                                                primary: Color(0xff67A9A9),
+                                                primary: Color(secondaryColor),
                                               ),
                                               child: Text(
-                                                (() {
-                                                  if (profile.language ==
-                                                      "English") {
-                                                    return "Save";
-                                                  } else {
-                                                    return "သိမ်းရန်";
-                                                  }
-                                                }()),
+                                                AppLocalizations.of(context)
+                                                        ?.save ??
+                                                    "Save",
                                               ),
                                             ),
                                           ),

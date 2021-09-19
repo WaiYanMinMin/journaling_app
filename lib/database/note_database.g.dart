@@ -64,6 +64,8 @@ class _$NoteDatabase extends NoteDatabase {
 
   ProfileDao? _profileDaoInstance;
 
+  EventDao? _eventDaoInstance;
+
   Future<sqflite.Database> open(String path, List<Migration> migrations,
       [Callback? callback]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
@@ -85,7 +87,9 @@ class _$NoteDatabase extends NoteDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `note` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT NOT NULL, `description` TEXT NOT NULL, `photo` TEXT NOT NULL, `emoji` INTEGER NOT NULL, `weather` INTEGER NOT NULL, `dueDate` TEXT NOT NULL)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `profile` (`id` INTEGER, `profiletitle` TEXT NOT NULL, `lastName` TEXT NOT NULL, `city` TEXT NOT NULL, `country` TEXT NOT NULL, `bgImage` TEXT NOT NULL, `profileImage` TEXT NOT NULL, `language` TEXT NOT NULL, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `profile` (`id` INTEGER, `profiletitle` TEXT NOT NULL, `lastName` TEXT NOT NULL, `city` TEXT NOT NULL, `country` TEXT NOT NULL, `bgImage` TEXT NOT NULL, `profileImage` TEXT NOT NULL, PRIMARY KEY (`id`))');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `event` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `eventtitle` TEXT NOT NULL, `fromdate` TEXT NOT NULL, `todate` TEXT NOT NULL)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -101,6 +105,11 @@ class _$NoteDatabase extends NoteDatabase {
   @override
   ProfileDao get profileDao {
     return _profileDaoInstance ??= _$ProfileDao(database, changeListener);
+  }
+
+  @override
+  EventDao get eventDao {
+    return _eventDaoInstance ??= _$EventDao(database, changeListener);
   }
 }
 
@@ -222,8 +231,7 @@ class _$ProfileDao extends ProfileDao {
                   'city': item.city,
                   'country': item.country,
                   'bgImage': item.bgImage,
-                  'profileImage': item.profileImage,
-                  'language': item.language
+                  'profileImage': item.profileImage
                 },
             changeListener),
         _profileUpdateAdapter = UpdateAdapter(
@@ -237,8 +245,7 @@ class _$ProfileDao extends ProfileDao {
                   'city': item.city,
                   'country': item.country,
                   'bgImage': item.bgImage,
-                  'profileImage': item.profileImage,
-                  'language': item.language
+                  'profileImage': item.profileImage
                 },
             changeListener);
 
@@ -262,24 +269,7 @@ class _$ProfileDao extends ProfileDao {
             row['country'] as String,
             row['bgImage'] as String,
             row['profileImage'] as String,
-            row['id'] as int?,
-            row['language'] as String),
-        queryableName: 'profile',
-        isView: false);
-  }
-
-  @override
-  Stream<Profile?> getlanguagedata() {
-    return _queryAdapter.queryStream('select language from profile',
-        mapper: (Map<String, Object?> row) => Profile(
-            row['profiletitle'] as String,
-            row['lastName'] as String,
-            row['city'] as String,
-            row['country'] as String,
-            row['bgImage'] as String,
-            row['profileImage'] as String,
-            row['id'] as int?,
-            row['language'] as String),
+            row['id'] as int?),
         queryableName: 'profile',
         isView: false);
   }
@@ -292,5 +282,45 @@ class _$ProfileDao extends ProfileDao {
   @override
   Future<void> updateProfile(Profile profile) async {
     await _profileUpdateAdapter.update(profile, OnConflictStrategy.abort);
+  }
+}
+
+class _$EventDao extends EventDao {
+  _$EventDao(this.database, this.changeListener)
+      : _queryAdapter = QueryAdapter(database, changeListener),
+        _eventInsertionAdapter = InsertionAdapter(
+            database,
+            'event',
+            (Event item) => <String, Object?>{
+                  'id': item.id,
+                  'eventtitle': item.title,
+                  'fromdate': item.fromdate,
+                  'todate': item.todate
+                },
+            changeListener);
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<Event> _eventInsertionAdapter;
+
+  @override
+  Stream<List<Event>> getAllEvent() {
+    return _queryAdapter.queryListStream('select * from event',
+        mapper: (Map<String, Object?> row) => Event(
+            title: row['eventtitle'] as String,
+            fromdate: row['fromdate'] as String,
+            todate: row['todate'] as String,
+            id: row['id'] as int?),
+        queryableName: 'event',
+        isView: false);
+  }
+
+  @override
+  Future<void> addEvent(Event event) async {
+    await _eventInsertionAdapter.insert(event, OnConflictStrategy.abort);
   }
 }

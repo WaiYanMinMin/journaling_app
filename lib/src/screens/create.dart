@@ -7,6 +7,10 @@ import 'package:intl/intl.dart';
 import 'package:journaling_app/database/data.dart';
 import 'package:journaling_app/database/notedao.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:journaling_app/src/App.dart';
+import 'package:journaling_app/src/provider/locale_provider.dart';
+import 'package:journaling_app/src/screens/utils/user_simple_preference.dart';
+import 'package:provider/provider.dart';
 import 'home.dart';
 
 class CreateScreen extends StatefulWidget {
@@ -23,6 +27,12 @@ class _CreateScreenState extends State<CreateScreen> {
   File? imageFile;
 
   ImagePicker _picker = ImagePicker();
+  String? color;
+  @override
+  void initState() {
+    super.initState();
+    color = UserSimplePreferences.getColor();
+  }
 
   _imgFromGallery() async {
     XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -37,9 +47,20 @@ class _CreateScreenState extends State<CreateScreen> {
 
   TextEditingController titlecontroller = TextEditingController();
   TextEditingController descriptioncontroller = TextEditingController();
-
+  late int primaryColor;
+  late int secondaryColor;
   @override
   Widget build(BuildContext context) {
+    if (color == 'blue') {
+      secondaryColor = 0xff67A9A9;
+      primaryColor = 0xff2B7279;
+    } else if (color == 'green') {
+      secondaryColor = 0xff30db2a;
+      primaryColor = 0xff127a2e;
+    } else {
+      secondaryColor = 0xffc3e02f;
+      primaryColor = 0xff607012;
+    }
     double? width = 80;
     final NoteDao noteDao = Get.find();
     if (AppLocalizations.of(context)?.language == "English") {
@@ -74,7 +95,7 @@ class _CreateScreenState extends State<CreateScreen> {
     ];
 
     return Scaffold(
-      backgroundColor: Color(0xFF2b7379),
+      backgroundColor: Color(primaryColor),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 0),
@@ -82,7 +103,7 @@ class _CreateScreenState extends State<CreateScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                color: Color(0xff67A9A9),
+                color: Color(secondaryColor),
                 child: InkWell(
                   onTap: () {
                     datePicker(context);
@@ -162,7 +183,7 @@ class _CreateScreenState extends State<CreateScreen> {
                           child: FaIcon(
                             emoList[index],
                             color: selectedIndex == index
-                                ? Color(0xff67A9A9)
+                                ? Color(secondaryColor)
                                 : Colors.white24,
                           ),
                         ),
@@ -205,7 +226,7 @@ class _CreateScreenState extends State<CreateScreen> {
                           child: FaIcon(
                             weatherList[index],
                             color: selectedIndexWeather == index
-                                ? Color(0xff67A9A9)
+                                ? Color(secondaryColor)
                                 : Colors.white24,
                           ),
                         ),
@@ -272,10 +293,8 @@ class _CreateScreenState extends State<CreateScreen> {
                   style: TextStyle(color: Colors.grey[200]),
                 ),
               ),
-              
               GestureDetector(
                 onTap: () {
-                  Get.replace(HomeScreen());
                   //print(titlecontroller.text);
                   // Get.back();
                   noteDao.addNote(
@@ -288,21 +307,26 @@ class _CreateScreenState extends State<CreateScreen> {
                       dueDate: _formatDate.toString(),
                     ),
                   );
-                 
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text('Story created!!'),
+                    duration: Duration(seconds: 2),
+                    backgroundColor: Color(secondaryColor),
+                  ));
+                  refreshAll();
                 },
                 child: Container(
                   width: width,
-                  margin: EdgeInsets.only(left:270),
+                  margin: EdgeInsets.only(left: 270),
                   padding: EdgeInsets.all(15.0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: Color(0xff67A9A9),
+                    color: Color(secondaryColor),
                   ),
                   child: Center(
                     child: Text(
                       AppLocalizations.of(context)?.save ?? "Save",
                       style: TextStyle(
-                          color: Color(0xFF2b7379),
+                          color: Color(primaryColor),
                           fontSize: 15,
                           fontWeight: FontWeight.bold),
                     ),
@@ -335,6 +359,7 @@ class _CreateScreenState extends State<CreateScreen> {
     setState(() {
       titlecontroller.clear();
       descriptioncontroller.clear();
+      imageFile = null;
     });
   }
 }

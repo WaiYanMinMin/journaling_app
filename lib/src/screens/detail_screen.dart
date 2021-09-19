@@ -8,10 +8,9 @@ import 'package:journaling_app/database/data.dart';
 import 'package:journaling_app/database/notedao.dart';
 import 'package:journaling_app/src/screens/home.dart';
 import 'package:journaling_app/src/screens/update_story.dart';
+import 'package:journaling_app/src/screens/utils/user_simple_preference.dart';
 
-class DetailScreen extends StatelessWidget {
-  final NoteDao noteDao = Get.find();
-  // Note note = Get.arguments;
+class DetailScreen extends StatefulWidget {
   final int id;
   final String title;
   final String description;
@@ -19,7 +18,6 @@ class DetailScreen extends StatelessWidget {
   final int selectedEmoji;
   final int selectedWeather;
   final String dueDate;
-
   DetailScreen(
       {required this.id,
       required this.title,
@@ -30,7 +28,34 @@ class DetailScreen extends StatelessWidget {
       required this.dueDate});
 
   @override
+  _DetailScreenState createState() => _DetailScreenState();
+}
+
+class _DetailScreenState extends State<DetailScreen> {
+  final NoteDao noteDao = Get.find();
+
+  String? color;
+
+  @override
+  void initState() {
+    super.initState();
+    color = UserSimplePreferences.getColor();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    int primaryColor;
+    int secondaryColor;
+    if (color == 'blue') {
+      secondaryColor = 0xff67A9A9;
+      primaryColor = 0xff2B7279;
+    } else if (color == 'green') {
+      secondaryColor = 0xff30db2a;
+      primaryColor = 0xff127a2e;
+    } else {
+      primaryColor = 0xffc3e02f;
+      secondaryColor = 0xff607012;
+    }
     IconData getEmoji(int? selectIndex) {
       if (selectIndex == 0) {
         return FontAwesomeIcons.sadCry;
@@ -61,7 +86,7 @@ class DetailScreen extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Color(0xFF2b7379),
+        backgroundColor: Color(primaryColor),
         body: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -85,7 +110,7 @@ class DetailScreen extends StatelessWidget {
                   width: 30,
                 ),
                 Text(
-                  dueDate,
+                  widget.dueDate,
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -102,7 +127,7 @@ class DetailScreen extends StatelessWidget {
                   width: MediaQuery.of(context).size.width,
                   //color: Colors.white12,
                   child: Text(
-                    title,
+                    widget.title,
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -126,9 +151,9 @@ class DetailScreen extends StatelessWidget {
                         ),
                         child: Center(
                           child: FaIcon(
-                            getEmoji(selectedEmoji),
+                            getEmoji(widget.selectedEmoji),
                             size: 20,
-                            color: Color(0xFF2b7379),
+                            color: Color(primaryColor),
                           ),
                         ),
                       ),
@@ -143,15 +168,15 @@ class DetailScreen extends StatelessWidget {
                           ),
                           child: Center(
                               child: FaIcon(
-                            getWeather(selectedWeather),
-                            color: Color(0xFF2b7379),
+                            getWeather(widget.selectedWeather),
+                            color: Color(primaryColor),
                             size: 20,
                           ))),
                     ],
                   ), //weather and emoji
                 ),
               ),
-              (photo != 'null')
+              (widget.photo != 'null')
                   ? Padding(
                       padding: const EdgeInsets.only(
                           left: 15, top: 10, bottom: 10, right: 15),
@@ -164,7 +189,7 @@ class DetailScreen extends StatelessWidget {
                           child: ClipRRect(
                               borderRadius: BorderRadius.circular(15),
                               child: Image.file(
-                                File(photo),
+                                File(widget.photo),
                                 fit: BoxFit.fill,
                               ))))
                   : Center(),
@@ -177,7 +202,7 @@ class DetailScreen extends StatelessWidget {
                   width: MediaQuery.of(context).size.width,
                   //color: Colors.white12,
                   child: Text(
-                    description,
+                    widget.description,
                     maxLines: 40,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -188,7 +213,7 @@ class DetailScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                height: (photo != 'null') ? 30 : 200,
+                height: (widget.photo != 'null') ? 30 : 200,
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 15, right: 15, bottom: 20),
@@ -197,13 +222,13 @@ class DetailScreen extends StatelessWidget {
                     onTap: () {
                       Get.to(
                         UpdateScreen(
-                            title: title,
-                            id: id,
-                            description: description,
-                            photo: photo,
-                            dueDate: dueDate,
-                            emoji: selectedEmoji,
-                            weather: selectedWeather),
+                            title: widget.title,
+                            id: widget.id,
+                            description: widget.description,
+                            photo: widget.photo,
+                            dueDate: widget.dueDate,
+                            emoji: widget.selectedEmoji,
+                            weather: widget.selectedWeather),
                       );
                     },
                     child: Container(
@@ -244,13 +269,13 @@ class DetailScreen extends StatelessWidget {
                     onTap: () {
                       noteDao.deleteNote(
                         Note(
-                          id: id,
-                          title: title,
-                          description: description,
-                          photo: photo,
-                          emoji: selectedEmoji,
-                          weather: selectedWeather,
-                          dueDate: dueDate,
+                          id: widget.id,
+                          title: widget.title,
+                          description: widget.description,
+                          photo: widget.photo,
+                          emoji: widget.selectedEmoji,
+                          weather: widget.selectedWeather,
+                          dueDate: widget.dueDate,
                         ),
                       );
                       Get.back();

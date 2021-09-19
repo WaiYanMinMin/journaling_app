@@ -1,20 +1,17 @@
-import 'package:journaling_app/src/screens/Calendar/model/event.dart';
+import 'package:journaling_app/database/data.dart';
+
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-import 'package:flutter/material.dart';
-class EventDataSource extends CalendarDataSource{
-  EventDataSource(List<Event> Appointments){
-    this.appointments=appointments;
+
+class EventDataSource extends CalendarDataSource {
+  EventDataSource(List<Event> appointments) {
+    this.appointments = appointments;
   }
-  Event getEvent(int index) =>appointments![index] as Event;
+  Event getEvent(int index) => appointments![index] as Event;
 
   @override
-  DateTime getStartTime(int index)=> getEvent(index).from;
+  DateTime getStartTime(int index) => DateTime.parse(getEvent(index).todate);
   @override
-  DateTime getEndTime(int index)=> getEvent(index).to;
+  DateTime getEndTime(int index) => DateTime.parse(getEvent(index).fromdate);
   @override
-  String getSubject(int index)=> getEvent(index).title;
-  @override
-  Color getColor(int index)=> getEvent(index).backgroundcolor;
-  @override
-  bool isAllDay(int index)=> getEvent(index).isAllDay;
+  String getSubject(int index) => getEvent(index).title;
 }

@@ -17,11 +17,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String? statelocale;
-
+  String? color;
   @override
   void initState() {
     super.initState();
     statelocale = UserSimplePreferences.getLanguage();
+    color = UserSimplePreferences.getColor();
   }
 
   final NoteDao noteDao = Get.find();
@@ -55,102 +56,96 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   TextEditingController? textSearchController = TextEditingController();
-
+  late int primaryColor;
+  late int secondaryColor;
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<LocaleProvider>(context, listen: false);
 
     provider.setLocale(Locale(statelocale ?? 'my'));
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Color(0xFF2b7379),
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding:
-                    EdgeInsets.only(top: 30, left: 10, right: 10, bottom: 10),
-                child: Column(
-                  children: [
-                    Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: TextField(
-                        controller: textSearchController,
-                        onChanged: (value) async {
-                          if (value != "") {
-                            Provider.of<LocaleProvider>(context, listen: false)
-                                .isSearch(true);
-                            Future.delayed(Duration(seconds: 1), () {
-                              Provider.of<LocaleProvider>(context,
-                                      listen: false)
-                                  .changeString(value);
-                            });
-                          } else {
-                            Provider.of<LocaleProvider>(context, listen: false)
-                                .isSearch(false);
-                            Future.delayed(Duration(seconds: 1), () {
-                              Provider.of<LocaleProvider>(context,
-                                      listen: false)
-                                  .changeString("null");
-                            });
-                          }
-                        },
-                        onSubmitted: (value) {
-                          if (value == "") {
-                            Provider.of<LocaleProvider>(context, listen: false)
-                                .isSearch(false);
-                          }
-                        },
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          prefixIcon: Icon(Icons.search),
-                          hintText: AppLocalizations.of(context)?.searchHint ??
-                              "Search by title",
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: 15, horizontal: 15),
-                        ),
-                      ),
+    if (color == 'blue') {
+      secondaryColor = 0xff67A9A9;
+      primaryColor = 0xff2B7279;
+    } else if (color == 'green') {
+      secondaryColor = 0xff30db2a;
+      primaryColor = 0xff127a2e;
+    } else {
+      secondaryColor = 0xffc3e02f;
+      primaryColor = 0xff607012;
+    }
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: Color(primaryColor),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 10),
+            child: Column(
+              children: [
+                Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: TextField(
+                    controller: textSearchController,
+                    onChanged: (value) async {
+                      Provider.of<LocaleProvider>(context, listen: false)
+                          .isSearch(true);
+                      Future.delayed(Duration(seconds: 1), () {
+                        Provider.of<LocaleProvider>(context, listen: false)
+                            .changeString(value);
+                      });
+                    },
+                    onSubmitted: (value) {
+                      if (value == "") {
+                        Provider.of<LocaleProvider>(context, listen: false)
+                            .isSearch(false);
+                      }
+                    },
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      prefixIcon: Icon(Icons.search),
+                      hintText: AppLocalizations.of(context)?.searchHint ??
+                          "Search by title",
+                      hintStyle: TextStyle(fontSize: 15),
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                     ),
-                  ],
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 16,
-              ),
-              Padding(
-                padding:
-                    EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-                child: Text(
-                  AppLocalizations.of(context)?.allEntries ?? "All Entries",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 19,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 15,
-                  right: 15,
-                ),
-                child: Container(
-                  margin: EdgeInsets.only(bottom: 20),
-                  height: MediaQuery.of(context).size.height,
-                  child: (Provider.of<LocaleProvider>(context).searchCheck)
-                      ? notesearchList()
-                      : noteList(),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
+          Padding(
+            padding:
+                EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+            child: Text(
+              AppLocalizations.of(context)?.allEntries ?? "All Entries",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 19,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 15,
+              right: 15,
+            ),
+            child: Container(
+              margin: new EdgeInsets.only(top: 10, bottom: 20),
+              height: 440,
+              child: (Provider.of<LocaleProvider>(context).searchCheck)
+                  ? notesearchList()
+                  : noteList(),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -160,7 +155,6 @@ class _HomeScreenState extends State<HomeScreen> {
       stream: noteDao.getAllNotes(),
       builder: (_, data) {
         if (data.hasData) {
-          print(data.data![0].id.toString());
           return ListView.builder(
             physics: ClampingScrollPhysics(),
             itemCount: data.data!.length,
@@ -183,7 +177,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 200,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
-                  //color: Color(0xFF2b7379),
                   color: Colors.white10,
                 ),
                 child: Stack(
@@ -198,7 +191,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             topLeft: Radius.circular(15),
                             topRight: Radius.circular(15),
                           ),
-                          color: Color(0xff67A9A9),
+                          color: Color(secondaryColor),
                         ),
                         height: 70,
                         child: Row(
@@ -220,7 +213,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       maxLines: 3,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
-                                          color: Color(0xFF2b7379),
+                                          color: Color(primaryColor),
                                           fontSize: 19,
                                           fontWeight: FontWeight.bold),
                                     ),
@@ -245,7 +238,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     child: Center(
                                       child: FaIcon(
                                         getEmoji(data.data![positioned].emoji),
-                                        color: Color(0xFF2b7379),
+                                        color: Color(primaryColor),
                                       ),
                                     ),
                                   ),
@@ -296,7 +289,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           style: TextStyle(
                                             fontSize: 27,
                                             fontWeight: FontWeight.w700,
-                                            color: Color(0xff67A9A9),
+                                            color: Color(secondaryColor),
                                           ),
                                         ),
                                         //Long long ago ,only have one fool in the Myanmar countryLong long ago ,only have one fool in the Myanmar countryLong long ago ,only have one fool in the Myanmar countryLong long ago ,only have one fool in the Myanmar countryLong long ago ,only have one fool in the Myanmar countryLong long ago ,only have one fool in the Myanmar countryLong long ago ,only have one fool in the Myanmar country
@@ -385,7 +378,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           );
         } else {
-          return Text('Error');
+          return Center();
         }
       },
     );
@@ -419,7 +412,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 200,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
-                  //color: Color(0xFF2b7379),
                   color: Colors.white10,
                 ),
                 child: Stack(
@@ -434,7 +426,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             topLeft: Radius.circular(15),
                             topRight: Radius.circular(15),
                           ),
-                          color: Color(0xff67A9A9),
+                          color: Color(secondaryColor),
                         ),
                         height: 70,
                         child: Row(
@@ -456,7 +448,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       maxLines: 3,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
-                                          color: Color(0xFF2b7379),
+                                          color: Color(primaryColor),
                                           fontSize: 19,
                                           fontWeight: FontWeight.bold),
                                     ),
@@ -481,7 +473,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     child: Center(
                                       child: FaIcon(
                                         getEmoji(data.data![positioned].emoji),
-                                        color: Color(0xFF2b7379),
+                                        color: Color(primaryColor),
                                       ),
                                     ),
                                   ),
@@ -532,7 +524,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           style: TextStyle(
                                             fontSize: 27,
                                             fontWeight: FontWeight.w700,
-                                            color: Color(0xff67A9A9),
+                                            color: Color(secondaryColor),
                                           ),
                                         ),
                                         //Long long ago ,only have one fool in the Myanmar countryLong long ago ,only have one fool in the Myanmar countryLong long ago ,only have one fool in the Myanmar countryLong long ago ,only have one fool in the Myanmar countryLong long ago ,only have one fool in the Myanmar countryLong long ago ,only have one fool in the Myanmar countryLong long ago ,only have one fool in the Myanmar country
@@ -619,9 +611,12 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           );
         } else {
-          return Text('Error');
+          return Text('Type Something');
         }
       },
+      
     );
+    
   }
+  
 }

@@ -1,36 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:journaling_app/database/data.dart';
+import 'package:journaling_app/database/notedao.dart';
+
 import 'package:journaling_app/l10n/l10n.dart';
-import 'package:journaling_app/src/screens/Calendar/model/event.dart';
+
 import 'package:journaling_app/src/screens/utils/user_simple_preference.dart';
 
 class LocaleProvider extends ChangeNotifier {
   Locale? _locale;
-  final List<Event> _events = [];
-  List<Event> get events => _events;
   Locale? get locale => _locale;
   String data = 'null';
   bool searchCheck = false;
+  String _color = 'blue';
+  int _index = 0;
+  void setcolor(String color) async {
+    await UserSimplePreferences.setColor(color);
+    _color = color;
+    notifyListeners();
+  }
+
+  getcolor() {
+    return _color;
+  }
+
+  void setindex(int index) {
+    _index = index;
+    notifyListeners();
+  }
+
+  getindex() {
+    return _index;
+  }
+
+  /* EventDao eventDao = Get.find(); */
   DateTime _selectedDate = DateTime.now();
   DateTime get selectedDate => _selectedDate;
   DateTime setDate(DateTime date) => _selectedDate = date;
-
-  List<Event> get eventOfSelectedDate => _events;
-  void addEvent(Event event) {
-    _events.add(event);
-    notifyListeners();
-  }
-
-  void editEvent(Event newEvent, Event oldEvent) {
-    final index = _events.indexOf(oldEvent);
-    _events[index] = newEvent;
-    notifyListeners();
-  }
-
-  void deleteEvent(Event event) {
-    _events.remove(event);
-    notifyListeners();
-  }
-
+/*   Stream<List<Event>> get eventofSelectedDate =>eventDao.getAllEvent(); */
   void changeString(String newString) {
     data = newString;
 

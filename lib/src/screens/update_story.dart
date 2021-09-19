@@ -10,6 +10,7 @@ import 'package:journaling_app/database/data.dart';
 import 'package:journaling_app/database/notedao.dart';
 import 'package:journaling_app/src/screens/home.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:journaling_app/src/screens/utils/user_simple_preference.dart';
 
 class UpdateScreen extends StatefulWidget {
   final String title;
@@ -53,6 +54,12 @@ class _UpdateScreenState extends State<UpdateScreen> {
   late TextEditingController titlecontroller = TextEditingController();
   late TextEditingController descriptioncontroller = TextEditingController();
   late File? imageFile;
+  String? color;
+  @override
+  void initState() {
+    super.initState();
+    color = UserSimplePreferences.getColor();
+  }
   _UpdateScreenState(
       {required this.title,
       required this.id,
@@ -128,6 +135,18 @@ class _UpdateScreenState extends State<UpdateScreen> {
 
   @override
   Widget build(BuildContext context) {
+    int primaryColor;
+    int secondaryColor;
+    if (color == 'blue') {
+      secondaryColor = 0xff67A9A9;
+      primaryColor = 0xff2B7279;
+    } else if (color == 'green') {
+      secondaryColor = 0xff30db2a;
+      primaryColor = 0xff127a2e;
+    } else {
+      primaryColor = 0xffc3e02f;
+      secondaryColor = 0xff607012;
+    }
     double? width = 80;
     List<IconData> emoList = [
       FontAwesomeIcons.sadCry,
@@ -145,7 +164,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Color(0xFF2b7379),
+        backgroundColor: Color(primaryColor),
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -184,7 +203,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
                 ),
               ), //App Bar
               Container(
-                color: Color(0xff67A9A9),
+                color: Color(secondaryColor),
                 child: InkWell(
                   onTap: () {
                     datePicker(context);
@@ -267,7 +286,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
                           child: FaIcon(
                             emoList[index],
                             color: selectedIndex == index
-                                ? Color(0xff67A9A9)
+                                ? Color(secondaryColor)
                                 : Colors.white24,
                           ),
                         ),
@@ -310,7 +329,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
                           child: FaIcon(
                             weatherList[index],
                             color: selectedIndexWeather == index
-                                ? Color(0xff67A9A9)
+                                ? Color(secondaryColor)
                                 : Colors.white24,
                           ),
                         ),
@@ -419,7 +438,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
                         child: Text(
                           AppLocalizations.of(context)?.cancel ?? "Back",
                           style: TextStyle(
-                            color: Color(0xFF2b7379),
+                            color: Color(primaryColor),
                           ),
                         ),
                       ),
@@ -447,7 +466,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
                       padding: EdgeInsets.all(15.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        color: Color(0xff67A9A9),
+                        color: Color(secondaryColor),
                       ),
                       child: Center(
                         child: Text(

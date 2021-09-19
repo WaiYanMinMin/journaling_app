@@ -5,8 +5,12 @@ import 'package:get/get.dart';
 import 'package:journaling_app/database/data.dart';
 import 'package:journaling_app/database/notedao.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:journaling_app/src/provider/locale_provider.dart';
 import 'package:journaling_app/src/screens/EditProfile.dart';
+import 'package:journaling_app/src/screens/utils/user_simple_preference.dart';
+
 import 'package:journaling_app/src/widgets/language_picker_widget.dart';
+import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -16,8 +20,27 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  String? color;
+  @override
+  void initState() {
+    super.initState();
+    color = UserSimplePreferences.getColor();
+  }
+
   @override
   Widget build(BuildContext context) {
+    int primaryColor;
+    int secondaryColor;
+    if (color == 'blue') {
+      secondaryColor = 0xff67A9A9;
+      primaryColor = 0xff2B7279;
+    } else if (color == 'green') {
+      secondaryColor = 0xff30db2a;
+      primaryColor = 0xff127a2e;
+    } else {
+      secondaryColor = 0xffc3e02f;
+      primaryColor = 0xff607012;
+    }
     final ProfileDao profileDao = Get.find();
 
     return Scaffold(
@@ -31,6 +54,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Column(
                     children: <Widget>[
                       Container(
+                        color: Color(secondaryColor),
                         height: 200.0,
                         child: Center(
                           child: data.hasData
@@ -39,12 +63,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   width: double.infinity,
                                   fit: BoxFit.fill,
                                 )
-                              : Text("Choose background image"),
+                              : Image.asset("assets/pngs/bgnull.png"),
                         ),
                       ),
                       Expanded(
                         child: Container(
-                            color: Color(0xff2B7279),
+                            color: Color(primaryColor),
                             child: Column(
                               children: [
                                 SizedBox(
@@ -64,7 +88,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   fontWeight: FontWeight.bold),
                                             )
                                           : Text(
-                                              "add a name",
+                                              "user",
                                               style: TextStyle(
                                                   fontSize: 20,
                                                   color: Colors.white,
@@ -79,7 +103,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         style: TextStyle(color: Colors.white54),
                                       )
                                     : Text(
-                                        'add city and country',
+                                        ' ',
                                         style: TextStyle(color: Colors.white54),
                                       ),
                                 SizedBox(
@@ -133,79 +157,109 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         }()),
                                         width: 100,
                                         height: 50,
-                                        child: LanguagePickerWidget(
-                                            data.data?.firstName ?? "null",
-                                            data.data?.lastName ?? "null",
-                                            data.data?.city ?? "null",
-                                            data.data?.country ?? "null",
-                                            data.data?.bgImage ?? "null",
-                                            data.data?.profileImage ?? "null"),
+                                        child: LanguagePickerWidget(),
                                       )
                                     ],
                                   ),
                                 ),
-                                // Container(
-                                //   margin:
-                                //       new EdgeInsets.only(left: 40, top: 30),
-                                //   width: double.infinity,
-                                //   child: Row(
-                                //     children: [
-                                //       Icon(
-                                //         FontAwesomeIcons.globe,
-                                //         color: Colors.white,
-                                //       ),
-                                //       Container(
-                                //           margin: new EdgeInsets.only(left: 10),
-                                //           child: Text("Add",
-                                //               style: TextStyle(
-                                //                   color: Colors.white,
-                                //                   fontWeight:
-                                //                       FontWeight.w500))),
-                                //       Container(
-                                //           margin:
-                                //               new EdgeInsets.only(left: 130),
-                                //           child: Text("Something here",
-                                //               style: TextStyle(
-                                //                 color: Colors.white,
-                                //               ))),
-                                //       Container(
-                                //         width: 30,
-                                //         height: 30,
-                                //         decoration: BoxDecoration(
-                                //           borderRadius:
-                                //               BorderRadius.circular(10),
-                                //           color: Color(0xff67A9A9),
-                                //         ),
-                                //         margin: new EdgeInsets.only(left: 10),
-                                //         child: IconButton(
-                                //             onPressed: () {},
-                                //             icon: Icon(Icons.arrow_forward_ios,
-                                //                 color: Colors.white, size: 15)),
-                                //       ),
-                                //     ],
-                                //   ),
-                                // ),
                                 Container(
-                                    margin: new EdgeInsets.only(top: 30),
-                                    width: double.infinity,
-                                    child: Container(
-                                        margin: new EdgeInsets.only(left: 10),
-                                        child: TextButton(
-                                          style: ButtonStyle(
-                                            overlayColor:
-                                                MaterialStateProperty.all(
-                                                    Colors.transparent),
-                                          ),
-                                          onPressed: () {},
+                                  margin:
+                                      new EdgeInsets.only(left: 40, top: 30),
+                                  width: double.infinity,
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                          margin: new EdgeInsets.only(left: 10),
                                           child: Text(
-                                            AppLocalizations.of(context)
-                                                    ?.eraseAll ??
-                                                "Erase all memories",
-                                            style: TextStyle(
-                                                fontSize: 15,
-                                                color: Colors.red),
-                                          ),
-                                        ))),
+                                              AppLocalizations.of(context)
+                                                      ?.themecolor ??
+                                                  "Change theme",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight:
+                                                      FontWeight.w500))),
+                                      Container(
+                                        margin: (() {
+                                          if (AppLocalizations.of(context)
+                                                  ?.language ==
+                                              "English") {
+                                            return new EdgeInsets.only(
+                                                left: 40);
+                                          } else {
+                                            return new EdgeInsets.only(
+                                                left: 30);
+                                          }
+                                        }()),
+                                        width: 180,
+                                        height: 50,
+                                        child: Row(
+                                          children: <Widget>[
+                                            Theme(
+                                              data: ThemeData(
+                                                  unselectedWidgetColor:
+                                                      Color(0xff67A9A9)),
+                                              child: Radio(
+                                                  activeColor:
+                                                      Color(secondaryColor),
+                                                  value: "blue",
+                                                  groupValue: color,
+                                                  onChanged: (value) {
+                                                    color = value.toString();
+                                                    setState(() {});
+                                                    final provider = Provider
+                                                        .of<LocaleProvider>(
+                                                            context,
+                                                            listen: false);
+                                                    provider.setcolor(
+                                                        color ?? 'blue');
+                                                  }),
+                                            ),
+                                            Theme(
+                                              data: ThemeData(
+                                                  unselectedWidgetColor:
+                                                      Color(0xffc3e02f)),
+                                              child: Radio(
+                                                  activeColor:
+                                                      Color(secondaryColor),
+                                                  value: "yellow",
+                                                  groupValue: color,
+                                                  onChanged: (value) {
+                                                    color = value.toString();
+                                                    setState(() {});
+                                                    final provider = Provider
+                                                        .of<LocaleProvider>(
+                                                            context,
+                                                            listen: false);
+                                                    provider.setcolor(
+                                                        color ?? 'blue');
+                                                  }),
+                                            ),
+                                            Theme(
+                                              data: ThemeData(
+                                                  unselectedWidgetColor:
+                                                      Color(0xff30db2a)),
+                                              child: Radio(
+                                                  activeColor:
+                                                      Color(secondaryColor),
+                                                  value: "green",
+                                                  groupValue: color,
+                                                  onChanged: (value) {
+                                                    color = value.toString();
+                                                    final provider = Provider
+                                                        .of<LocaleProvider>(
+                                                            context,
+                                                            listen: false);
+                                                    provider.setcolor(
+                                                        color ?? 'blue');
+                                                    setState(() {});
+                                                  }),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
                               ],
                             )),
                       )
@@ -226,7 +280,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   File(data.data!.profileImage),
                                   fit: BoxFit.fill,
                                 )
-                              : Text("Choose image")),
+                              : Image.asset("assets/pngs/profile.png")),
                     ),
                   ),
                   Positioned(
@@ -238,14 +292,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: IconButton(
                         onPressed: () {
                           profileDao.updateProfile(Profile(
-                            data.data?.firstName ?? "null",
-                            data.data?.lastName ?? "null",
-                            data.data?.city ?? "null",
-                            data.data?.country ?? "null",
-                            data.data?.bgImage ?? "null",
-                            data.data?.profileImage ?? "null",
+                            data.data?.firstName ?? "",
+                            data.data?.lastName ?? "",
+                            data.data?.city ?? "",
+                            data.data?.country ?? "",
+                            data.data?.bgImage ?? "assets/pngs/bgnull.png",
+                            data.data?.profileImage ??
+                                "assets/pngs/profile.png",
                             1,
-                            AppLocalizations.of(context)?.language ?? "English",
                           ));
                           Get.to(EditProfileScreen(), arguments: data.data);
                         },

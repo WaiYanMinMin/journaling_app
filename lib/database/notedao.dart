@@ -22,8 +22,14 @@ abstract class ProfileDao {
   Future<void> createProfile(Profile profile);
   @Query('select * from profile')
   Stream<Profile?> getProfiledata();
-  @Query('select language from profile')
-  Stream<Profile?> getlanguagedata();
   @update
   Future<void> updateProfile(Profile profile);
+}
+
+@dao
+abstract class EventDao {
+  @insert
+  Future<void> addEvent(Event event);
+  @Query('select * from event')
+  Stream<List<Event>> getAllEvent();
 }

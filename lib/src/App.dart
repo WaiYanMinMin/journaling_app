@@ -18,8 +18,12 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  
-  
+  @override
+  void initState() {
+    final provider = Provider.of<LocaleProvider>(context, listen: false);
+    super.initState();
+    provider.setcolor(UserSimplePreferences.getColor());
+  }
 
   int _page = 0;
   final screens = [
@@ -30,14 +34,33 @@ class _MyAppState extends State<MyApp> {
   ];
   @override
   Widget build(BuildContext context) {
-    
+    String? color;
+   
+    final provider = Provider.of<LocaleProvider>(context, listen: false);
+    color = provider.getcolor();
+    int primaryColor = 0xff2B7279;
+    int secondaryColor = 0xff67A9A9;
+    setState(() {
+      if (color == 'blue') {
+        secondaryColor = 0xff67A9A9;
+        primaryColor = 0xff2B7279;
+      } else if (color == 'green') {
+        secondaryColor = 0xff30db2a;
+        primaryColor = 0xff127a2e;
+      } else {
+        secondaryColor = 0xffc3e02f;
+        primaryColor = 0xff607012;
+      }
+    });
+
     ProfileDao profile = Get.find();
 
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         bottomNavigationBar: CurvedNavigationBar(
           index: 0,
-          color: Color(0xff67A9A9),
-          backgroundColor: Color(0xff2B7279),
+          color: Color(secondaryColor),
+          backgroundColor: Color(primaryColor),
           items: [
             Icon(
               FontAwesomeIcons.home,
