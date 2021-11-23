@@ -35,7 +35,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     String? color;
-   
+
     final provider = Provider.of<LocaleProvider>(context, listen: false);
     color = provider.getcolor();
     int primaryColor = 0xff2B7279;
@@ -85,18 +85,6 @@ class _MyAppState extends State<MyApp> {
             });
           },
         ),
-        body: StreamBuilder<Profile?>(
-            stream: profile.getProfiledata(),
-            builder: (_, data) {
-              // return (() {
-              //   if (data.data?.language == "မြန်မာ") {
-              //     provider.setLocale(Locale('my'));
-              //     return screens[_page];
-              //   } else {
-              //     return screens[_page];
-              //   }
-              // }());
-              return screens[_page];
-            }));
+        body: screens[_page]);
   }
 }

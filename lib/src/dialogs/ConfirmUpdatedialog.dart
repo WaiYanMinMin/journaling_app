@@ -1,16 +1,16 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:journaling_app/database/data.dart';
 import 'package:journaling_app/database/notedao.dart';
+import 'package:journaling_app/src/screens/EditProfile.dart';
 
 import 'package:journaling_app/src/screens/Profile.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class ConfirmUpdatedialog {
   final ProfileDao profileDao = Get.find();
-  
+
   confirmationUpdate(
       BuildContext context,
       String title,
@@ -69,7 +69,7 @@ class ConfirmUpdatedialog {
                   profileDao.updateProfile(Profile(firstname, lastname, city,
                       country, bgImage, profileImage, 1));
 
-                  Get.close(2);
+                  Get.to(EditProfileScreen());
                 }, //update data to database
                 child: Text(
                   (() {
