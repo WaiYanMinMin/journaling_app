@@ -95,10 +95,50 @@ class _CreateScreenState extends State<CreateScreen> {
     ];
 
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0.0,
+        backgroundColor: Color(primaryColor),
+        actions: [
+          GestureDetector(
+            onTap: () {
+              //print(titlecontroller.text);
+              // Get.back();
+              noteDao.addNote(
+                Note(
+                  title: titlecontroller.text,
+                  description: descriptioncontroller.text,
+                  photo: imageFile?.path ?? 'null',
+                  emoji: selectedIndex,
+                  weather: selectedIndexWeather,
+                  dueDate: _formatDate.toString(),
+                ),
+              );
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text('Story created!!'),
+                duration: Duration(seconds: 2),
+                backgroundColor: Color(secondaryColor),
+              ));
+              refreshAll();
+            },
+            child: Container(
+              width: width,
+              child: Center(
+                child: Text(
+                  AppLocalizations.of(context)?.save ?? "Save",
+                  style: TextStyle(
+                      color: Color(secondaryColor),
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
       backgroundColor: Color(primaryColor),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 0),
+          padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -293,46 +333,6 @@ class _CreateScreenState extends State<CreateScreen> {
                   style: TextStyle(color: Colors.grey[200]),
                 ),
               ),
-              GestureDetector(
-                onTap: () {
-                  //print(titlecontroller.text);
-                  // Get.back();
-                  noteDao.addNote(
-                    Note(
-                      title: titlecontroller.text,
-                      description: descriptioncontroller.text,
-                      photo: imageFile?.path ?? 'null',
-                      emoji: selectedIndex,
-                      weather: selectedIndexWeather,
-                      dueDate: _formatDate.toString(),
-                    ),
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text('Story created!!'),
-                    duration: Duration(seconds: 2),
-                    backgroundColor: Color(secondaryColor),
-                  ));
-                  refreshAll();
-                },
-                child: Container(
-                  width: width,
-                  margin: EdgeInsets.only(left: 270),
-                  padding: EdgeInsets.all(15.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Color(secondaryColor),
-                  ),
-                  child: Center(
-                    child: Text(
-                      AppLocalizations.of(context)?.save ?? "Save",
-                      style: TextStyle(
-                          color: Color(primaryColor),
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-              )
             ],
           ),
         ),

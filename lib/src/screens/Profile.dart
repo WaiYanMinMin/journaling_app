@@ -6,7 +6,7 @@ import 'package:journaling_app/database/data.dart';
 import 'package:journaling_app/database/notedao.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:journaling_app/src/provider/locale_provider.dart';
-import 'package:journaling_app/src/screens/EditProfile.dart';
+
 import 'package:journaling_app/src/screens/utils/user_simple_preference.dart';
 
 import 'package:journaling_app/src/widgets/language_picker_widget.dart';
@@ -74,44 +74,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 SizedBox(
                                   height: 80,
                                 ),
-                                Container(
-                                  width: double.infinity,
-                                  child: Center(
-                                      child: data.hasData
-                                          ? Text(
-                                              data.data!.firstName +
-                                                  " " +
-                                                  data.data!.lastName,
-                                              style: TextStyle(
-                                                  fontSize: 20,
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold),
-                                            )
-                                          : Text(
-                                              "user",
-                                              style: TextStyle(
-                                                  fontSize: 20,
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold),
-                                            )),
-                                ),
-                                data.hasData
-                                    ? Text(
-                                        data.data!.city +
-                                            "," +
-                                            data.data!.country,
-                                        style: TextStyle(color: Colors.white54),
-                                      )
-                                    : Text(
-                                        ' ',
-                                        style: TextStyle(color: Colors.white54),
-                                      ),
                                 SizedBox(
                                   height: 20,
                                 ),
                                 Container(
                                   height: 50,
-                                  margin: new EdgeInsets.only(left: 40),
+                                  margin: new EdgeInsets.only(left: 20),
                                   width: double.infinity,
                                   child: Text(
                                     AppLocalizations.of(context)?.settings ??
@@ -124,7 +92,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                                 Container(
                                   margin:
-                                      new EdgeInsets.only(left: 40, top: 30),
+                                      new EdgeInsets.only(left: 20, top: 30),
                                   width: double.infinity,
                                   child: Row(
                                     children: [
@@ -164,7 +132,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                                 Container(
                                   margin:
-                                      new EdgeInsets.only(left: 40, top: 30),
+                                      new EdgeInsets.only(left: 20, top: 30),
                                   width: double.infinity,
                                   child: Row(
                                     children: [
@@ -184,7 +152,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   ?.language ==
                                               "English") {
                                             return new EdgeInsets.only(
-                                                left: 40);
+                                                left: 20);
                                           } else {
                                             return new EdgeInsets.only(
                                                 left: 30);
@@ -264,52 +232,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             )),
                       )
                     ],
-                  ),
-
-                  // Profile image
-                  Positioned(
-                    top:
-                        150.0, //(background container size) - (circle height / 2)
-                    child: Container(
-                      height: 100.0,
-                      width: 100.0,
-                      child: ClipRRect(
-                          borderRadius: BorderRadius.circular(100),
-                          child: data.hasData
-                              ? Image.file(
-                                  File(data.data!.profileImage),
-                                  fit: BoxFit.fill,
-                                )
-                              : Image.asset("assets/pngs/profile.png")),
-                    ),
-                  ),
-                  Positioned(
-                    top: 200,
-                    left: 350,
-                    child: Container(
-                      width: 50,
-                      height: 50,
-                      child: IconButton(
-                        onPressed: () {
-                          profileDao.updateProfile(Profile(
-                            data.data?.firstName ?? "",
-                            data.data?.lastName ?? "",
-                            data.data?.city ?? "",
-                            data.data?.country ?? "",
-                            data.data?.bgImage ?? "assets/pngs/bgnull.png",
-                            data.data?.profileImage ??
-                                "assets/pngs/profile.png",
-                            1,
-                          ));
-                          Get.to(EditProfileScreen(), arguments: data.data);
-                        },
-                        icon: FaIcon(
-                          FontAwesomeIcons.edit,
-                          size: 20,
-                        ),
-                        color: Colors.white,
-                      ),
-                    ),
                   ),
                 ],
               );

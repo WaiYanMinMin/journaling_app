@@ -2,15 +2,12 @@ import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-
 import 'package:get/route_manager.dart';
 import 'package:get/instance_manager.dart';
 import 'package:is_first_run/is_first_run.dart';
 import 'package:journaling_app/l10n/l10n.dart';
 import 'package:journaling_app/src/App.dart';
 import 'package:journaling_app/src/provider/locale_provider.dart';
-import 'package:journaling_app/src/screens/Setupprofile.dart';
-
 import 'package:journaling_app/src/screens/onboardingscreens/onboardingscreen.dart';
 import 'package:journaling_app/src/screens/utils/user_simple_preference.dart';
 import 'package:provider/provider.dart';

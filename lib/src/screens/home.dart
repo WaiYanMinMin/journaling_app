@@ -77,75 +77,77 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Color(primaryColor),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 10),
-            child: Column(
-              children: [
-                Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  child: TextField(
-                    controller: textSearchController,
-                    onChanged: (value) async {
-                      Provider.of<LocaleProvider>(context, listen: false)
-                          .isSearch(true);
-                      Future.delayed(Duration(seconds: 1), () {
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(top: 40, left: 10, right: 10, bottom: 10),
+              child: Column(
+                children: [
+                  Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: TextField(
+                      controller: textSearchController,
+                      onChanged: (value) async {
                         Provider.of<LocaleProvider>(context, listen: false)
-                            .changeString(value);
-                      });
-                    },
-                    onSubmitted: (value) {
-                      if (value == "") {
-                        Provider.of<LocaleProvider>(context, listen: false)
-                            .isSearch(false);
-                      }
-                    },
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      prefixIcon: Icon(Icons.search),
-                      hintText: AppLocalizations.of(context)?.searchHint ??
-                          "Search by title",
-                      hintStyle: TextStyle(fontSize: 15),
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                            .isSearch(true);
+                        Future.delayed(Duration(seconds: 1), () {
+                          Provider.of<LocaleProvider>(context, listen: false)
+                              .changeString(value);
+                        });
+                      },
+                      onSubmitted: (value) {
+                        if (value == "") {
+                          Provider.of<LocaleProvider>(context, listen: false)
+                              .isSearch(false);
+                        }
+                      },
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        prefixIcon: Icon(Icons.search),
+                        hintText: AppLocalizations.of(context)?.searchHint ??
+                            "Search by title",
+                        hintStyle: TextStyle(fontSize: 15),
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          Padding(
-            padding:
-                EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-            child: Text(
-              AppLocalizations.of(context)?.allEntries ?? "All Entries",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 19,
-                  fontWeight: FontWeight.bold),
+            Padding(
+              padding:
+                  EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+              child: Text(
+                AppLocalizations.of(context)?.allEntries ?? "All Entries",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 19,
+                    fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(
-              left: 15,
-              right: 15,
+            SizedBox(
+              height: 10,
             ),
-            child: Container(
-              margin: new EdgeInsets.only(top: 10, bottom: 20),
-              height: 440,
-              child: (Provider.of<LocaleProvider>(context).searchCheck)
-                  ? notesearchList()
-                  : noteList(),
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 15,
+                right: 15,
+              ),
+              child: Container(
+                margin: new EdgeInsets.only(top: 10, bottom: 20),
+                height: 440,
+                child: (Provider.of<LocaleProvider>(context).searchCheck)
+                    ? notesearchList()
+                    : noteList(),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

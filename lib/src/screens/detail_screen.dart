@@ -213,105 +213,108 @@ class _DetailScreenState extends State<DetailScreen> {
                 ),
               ),
               SizedBox(
-                height: (widget.photo != 'null') ? 30 : 200,
+                height: (widget.photo != 'null') ? 30 : 180,
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 15, right: 15, bottom: 20),
-                child: Row(children: [
-                  GestureDetector(
-                    onTap: () {
-                      Get.to(
-                        UpdateScreen(
-                            title: widget.title,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(children: [
+                    GestureDetector(
+                      onTap: () {
+                        Get.to(
+                          UpdateScreen(
+                              title: widget.title,
+                              id: widget.id,
+                              description: widget.description,
+                              photo: widget.photo,
+                              dueDate: widget.dueDate,
+                              emoji: widget.selectedEmoji,
+                              weather: widget.selectedWeather),
+                        );
+                      },
+                      child: Container(
+                        height: 40,
+                        width: MediaQuery.of(context).size.width / 2.5,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Colors.white30,
+                        ),
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Edit',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w700),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Icon(
+                                Icons.edit,
+                                color: Colors.white,
+                                size: 19,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 38,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        noteDao.deleteNote(
+                          Note(
                             id: widget.id,
+                            title: widget.title,
                             description: widget.description,
                             photo: widget.photo,
-                            dueDate: widget.dueDate,
                             emoji: widget.selectedEmoji,
-                            weather: widget.selectedWeather),
-                      );
-                    },
-                    child: Container(
-                      height: 40,
-                      width: MediaQuery.of(context).size.width / 2.5,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: Colors.white30,
-                      ),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Edit',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w700),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Icon(
-                              Icons.edit,
-                              color: Colors.white,
-                              size: 19,
-                            ),
-                          ],
+                            weather: widget.selectedWeather,
+                            dueDate: widget.dueDate,
+                          ),
+                        );
+                        Get.back();
+                      },
+                      child: Container(
+                        height: 40,
+                        width: MediaQuery.of(context).size.width / 2.5,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Colors.redAccent,
+                        ),
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Delete',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w700),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Icon(
+                                Icons.delete,
+                                color: Colors.white,
+                                size: 19,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 48,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      noteDao.deleteNote(
-                        Note(
-                          id: widget.id,
-                          title: widget.title,
-                          description: widget.description,
-                          photo: widget.photo,
-                          emoji: widget.selectedEmoji,
-                          weather: widget.selectedWeather,
-                          dueDate: widget.dueDate,
-                        ),
-                      );
-                      Get.back();
-                    },
-                    child: Container(
-                      height: 40,
-                      width: MediaQuery.of(context).size.width / 2.5,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: Colors.redAccent,
-                      ),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Delete',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w700),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Icon(
-                              Icons.delete,
-                              color: Colors.white,
-                              size: 19,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  )
-                ]),
+                    )
+                  ]),
+                ),
               ),
             ],
           ),

@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:journaling_app/src/screens/home.dart';
 
-import 'package:journaling_app/src/screens/Setupprofile.dart';
+import '../../App.dart';
 
 class StartScreen extends StatelessWidget {
   @override
@@ -31,7 +32,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
   final introKey = GlobalKey<IntroductionScreenState>();
 
   void _onIntroEnd(context) {
-    Get.off(SetupProfileScreen());
+    Get.off(MyApp());
   }
 
   Widget _buildImage(String assetName, [double width = 350]) {

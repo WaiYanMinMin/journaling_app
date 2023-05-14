@@ -6,7 +6,7 @@ import 'package:journaling_app/database/data.dart';
 import 'package:journaling_app/database/notedao.dart';
 import 'package:journaling_app/src/provider/locale_provider.dart';
 import 'package:journaling_app/src/screens/Profile.dart';
-import 'package:journaling_app/src/screens/calendar.dart';
+
 import 'package:journaling_app/src/screens/create.dart';
 import 'package:journaling_app/src/screens/home.dart';
 import 'package:journaling_app/src/screens/utils/user_simple_preference.dart';
@@ -29,14 +29,13 @@ class _MyAppState extends State<MyApp> {
   final screens = [
     HomeScreen(),
     CreateScreen(),
-    CalendarScreen(),
     ProfileScreen(),
   ];
   @override
   Widget build(BuildContext context) {
     String? color;
 
-    final provider = Provider.of<LocaleProvider>(context, listen: false);
+    final provider = Provider.of<LocaleProvider>(context, listen: true);
     color = provider.getcolor();
     int primaryColor = 0xff2B7279;
     int secondaryColor = 0xff67A9A9;
@@ -68,10 +67,6 @@ class _MyAppState extends State<MyApp> {
             ),
             Icon(
               FontAwesomeIcons.plus,
-              color: Colors.white,
-            ),
-            Icon(
-              FontAwesomeIcons.calendarAlt,
               color: Colors.white,
             ),
             Icon(
